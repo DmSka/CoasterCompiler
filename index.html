@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <header>
     <h1>Coaster Code</h1>
     <nav>
@@ -18,105 +17,67 @@
 </header>
 
 <main>
-
     <section class="editor">
         <h2>Coaster Editor</h2>
-
         <div class="workspace">
-
             <aside class="track-library">
                 <h3>Track Pieces</h3>
-
-                <!-- Template icon images: replace these files with your own icons -->
-                <div class="track-piece" draggable="true" data-piece="station">
-                    <img src="icons/station.png" alt="">
-                    <span>Station</span>
-                </div>
-
-                <div class="track-piece" draggable="true" data-piece="straight">
-                    <img src="icons/straight.png" alt="">
-                    <span>Straight</span>
-                </div>
-
-                <div class="track-piece" draggable="true" data-piece="drop">
-                    <img src="icons/drop.png" alt="">
-                    <span>Drop</span>
-                </div>
-
-                <div class="track-piece" draggable="true" data-piece="turn-left">
-                    <img src="icons/turn-left.png" alt="">
-                    <span>Left Turn</span>
-                </div>
-
-                <div class="track-piece" draggable="true" data-piece="turn-right">
-                    <img src="icons/turn-right.png" alt="">
-                    <span>Right Turn</span>
-                </div>
-
-                <div class="track-piece" draggable="true" data-piece="lift">
-                    <img src="icons/lift.png" alt="">
-                    <span>Chain Lift</span>
-                </div>
-
-                <div class="track-piece" draggable="true" data-piece="launch">
-                    <img src="icons/launch.png" alt="">
-                    <span>Launch</span>
-                </div>
-
-                <div class="track-piece" draggable="true" data-piece="inversion">
-                    <img src="icons/inversion.png" alt="">
-                    <span>Inversion</span>
-                </div>
+                <div class="track-piece" draggable="true" data-piece="station"><img src="icons/station.png" alt=""><span>Station</span></div>
+                <div class="track-piece" draggable="true" data-piece="straight"><img src="icons/straight.png" alt=""><span>Straight</span></div>
+                <div class="track-piece" draggable="true" data-piece="drop"><img src="icons/drop.png" alt=""><span>Drop</span></div>
+                <div class="track-piece" draggable="true" data-piece="turn-left"><img src="icons/turn-left.png" alt=""><span>Left Turn</span></div>
+                <div class="track-piece" draggable="true" data-piece="turn-right"><img src="icons/turn-right.png" alt=""><span>Right Turn</span></div>
+                <div class="track-piece" draggable="true" data-piece="lift"><img src="icons/lift.png" alt=""><span>Chain Lift</span></div>
+                <div class="track-piece" draggable="true" data-piece="launch"><img src="icons/launch.png" alt=""><span>Launch</span></div>
+                <div class="track-piece" draggable="true" data-piece="inversion"><img src="icons/inversion.png" alt=""><span>Inversion</span></div>
             </aside>
 
             <section class="coaster-area">
                 <h3>Track Sequence</h3>
-
                 <div id="trackSequence" class="track-sequence">
                     <p id="emptyMessage">Drag track pieces here.</p>
                 </div>
             </section>
-
         </div>
 
         <div class="force-section">
-            <h3>G Force</h3>
-
-            <div class="force-legend">
-                <span>Vertical</span>
-                <span>Forward</span>
-                <span>Lateral</span>
-                <span>Speed</span>
+            <div class="force-header">
+                <h3>Coaster Data</h3>
+                <div class="data-actions">
+                    <button id="saveJson">Save JSON</button>
+                    <button id="saveCsv">Save CSV</button>
+                </div>
             </div>
 
-            <canvas id="forceGraph"></canvas>
-        </div>
+            <div class="graph-tabs" role="tablist">
+                <button class="graph-tab active" data-graph="vertical">Vertical</button>
+                <button class="graph-tab" data-graph="forward">Forward</button>
+                <button class="graph-tab" data-graph="lateral">Lateral</button>
+                <button class="graph-tab" data-graph="speed">Speed</button>
+            </div>
 
+            <div class="graph-panel">
+                <div class="graph-title-row">
+                    <strong id="graphTitle">Vertical G-force</strong>
+                    <span id="graphUnits">G</span>
+                </div>
+                <canvas id="forceGraph"></canvas>
+            </div>
+        </div>
     </section>
 
     <section class="tokenizer">
         <h2>G Force Tokenizer</h2>
-
-        <p>
-            The coaster sequence will eventually be converted into tokens
-            using the G-force curve and time information.
-        </p>
-
+        <p>The coaster data will eventually be decoded into tokens using the four graphs and time information.</p>
         <pre id="tokenOutput">// Tokens will appear here.</pre>
     </section>
 
     <section class="compiler">
         <h2>Compiler</h2>
-
-        <p>
-            Tokens will eventually be compiled into C++.
-        </p>
-
+        <p>Tokens will eventually be compiled into C++.</p>
         <pre id="cppOutput">// C++ output will appear here.</pre>
     </section>
-
 </main>
-
 <script src="app.js"></script>
 </body>
 </html>
