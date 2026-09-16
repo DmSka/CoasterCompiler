@@ -6,7 +6,9 @@ const trackData = {
     "turn-right": { name: "Right Turn", icon: "icons/turn-right.png", vertical: 0, forward: 0, lateral: 0, speed: 0 },
     lift: { name: "Chain Lift", icon: "icons/lift.png", vertical: 0, forward: 0, lateral: 0, speed: 0 },
     launch: { name: "Launch", icon: "icons/launch.png", vertical: 0, forward: 0, lateral: 0, speed: 0 },
-    inversion: { name: "Inversion", icon: "icons/inversion.png", vertical: 0, forward: 0, lateral: 0, speed: 0 }
+    inversion: { name: "Inversion", icon: "icons/inversion.png", vertical: 0, forward: 0, lateral: 0, speed: 0 },
+    brake: { name: "Brake", icon: "icons/brake.png", vertical: 0, forward: 0, lateral: 0, speed: 0 },
+    "block-brake": { name: "Block Brake", icon: "icons/block-brake.png", vertical: 0, forward: 0, lateral: 0, speed: 0 }
 };
 
 const graphInfo = {
@@ -66,8 +68,6 @@ function removePiece(index) {
 
 function render() {
     renderSequence();
-    renderGraph();
-    renderTokens();
 }
 
 function renderSequence() {
@@ -105,8 +105,6 @@ function getCoasterData() {
             const shape = Math.sin(Math.PI * t);
             const edge = 0.5 + 0.5 * Math.cos(2 * Math.PI * t);
 
-            // These are placeholder profiles for the prototype. They can later be
-            // replaced with measured/simulated forces for each real track element.
             const vertical = piece.vertical * shape;
             const forward = piece.forward * shape;
             const lateral = piece.lateral * shape;
@@ -126,96 +124,6 @@ function getCoasterData() {
     });
 
     return data;
-}
-
-function renderGraph() {
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const ratio = window.devicePixelRatio || 1;
-    canvas.width = Math.max(1, width * ratio);
-    canvas.height = Math.max(1, height * ratio);
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    ctx.clearRect(0, 0, width, height);
-
-    ctx.strokeStyle = "#e5e5e5";
-    ctx.lineWidth = 1;
-    for (let y = 20; y < height; y += 30) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-    }
-
-    const data = getCoasterData();
-    if (!data.length) return;
-
-    const values = data.map(row => row[activeGraph]);
-    let min = Math.min(...values);
-    let max = Math.max(...values);
-
-    if (activeGraph === "speed") {
-        min = 0;
-        max = Math.max(20, max * 1.1);
-    } else {
-        const limit = Math.max(1, Math.ceil(Math.max(Math.abs(min), Math.abs(max)) * 1.2 * 10) / 10);
-        min = -limit;
-        max = limit;
-    }
-
-    if (min < 0 && max > 0) {
-        const zeroY = height - ((0 - min) / (max - min)) * height;
-        ctx.strokeStyle = "#999";
-        ctx.beginPath();
-        ctx.moveTo(0, zeroY);
-        ctx.lineTo(width, zeroY);
-        ctx.stroke();
-    }
-
-    ctx.strokeStyle = "#222";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    values.forEach((value, index) => {
-        const x = index / Math.max(values.length - 1, 1) * width;
-        const y = height - ((value - min) / (max - min)) * height;
-        if (index === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-}
-
-function updateGraphHeading() {
-    document.getElementById("graphTitle").textContent = graphInfo[activeGraph].title;
-    document.getElementById("graphUnits").textContent = graphInfo[activeGraph].units;
-}
-
-function renderTokens() {
-    const tokens = sequence.map(type => {
-        switch (type) {
-            case "drop": return "INT";
-            case "turn-left": return "=";
-            case "turn-right": return "-";
-            case "launch": return ";";
-            case "station": return "PRINT";
-            case "lift": return "INPUT";
-            case "inversion": return "WHILE";
-            default: return null;
-        }
-    }).filter(Boolean);
-
-    tokenOutput.textContent = tokens.length ? tokens.join("  ") : "// Tokens will appear here.";
-    cppOutput.textContent = compile(tokens);
-}
-
-function compile(tokens) {
-    if (!tokens.length) return "// C++ output will appear here.";
-    let code = `#include <iostream>\n#include <string>\n\nint main()\n{\n`;
-    tokens.forEach(token => {
-        if (token === "INT") code += "    int value;\n";
-        if (token === "PRINT") code += "    std::cout << value << std::endl;\n";
-        if (token === "INPUT") code += "    std::cin >> value;\n";
-        if (token === ";") code += "    // endline\n";
-    });
-    return code + "    return 0;\n}";
 }
 
 function saveJson() {
