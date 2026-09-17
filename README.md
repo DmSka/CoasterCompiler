@@ -1,8 +1,12 @@
 # Coaster Code
 
-Simple first-phase web interface for the Coaster Code project.
+Coaster editor and code generator for coaster layouts
 
-## Files
+## Coaster Editor
+
+This is the editor portion of the project. This webpage will allow users to place track pieces and built custom layouts. These layouts can be simulated to produce G-Force waves along with speed, banking, and height data.
+
+### Files
 
 index.html
 style.css
@@ -18,30 +22,31 @@ icons/
     launch.png
     inversion.png
 
-## Icons
+### Icons
 
 The icon files are intentionally blank template PNG files. Replace them with your own track-piece icons without changing the HTML or JavaScript.
 
-## Run
+### Run
 
 Open index.html in a browser.
 
-No server is required.
+## Code Generation
 
-## Project direction
+This portion will take in the coaster data and generate C++ code from the layout
 
-The current page is only the editor/interface foundation.
+### Software Architecture
 
-The intended pipeline is:
+This is an outline of the software architecture used to produce the code
 
-Coaster Editor
-    ->
-G-force data + time
-    ->
-G Force Tokenizer
-    ->
-Token stream
-    ->
-C++ Compiler
+#### Wave Pattern Detector
 
-The current token output is placeholder logic. It should later be replaced by a tokenizer that recognizes G-force patterns.
+#### Element Generator
+
+#### Tag Generator
+
+#### Tokenizer
+
+### Run
+
+needs to be implemented
+will be generated through webpage inputing a json or file type for coaster data
