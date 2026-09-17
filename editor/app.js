@@ -15,7 +15,9 @@ const graphInfo = {
     vertical: { title: "Vertical G-force", units: "G" },
     forward: { title: "Forward G-force", units: "G" },
     lateral: { title: "Lateral G-force", units: "G" },
-    speed: { title: "Speed", units: "mph" }
+    speed: { title: "Speed", units: "mph" },
+    height: { title: "Height", units: "ft" },
+    banking: { title: "Banking Angle", units: "degrees" }
 };
 
 const sequence = [];
