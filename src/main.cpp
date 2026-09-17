@@ -1,5 +1,9 @@
 #include <iostream>
 #include <vector>
+#include "ElementGenerator.h"
+#include "TagGenerator.h"
+#include "WavePatternDetector.h"
+#include "Tokenizer.h"
 
 using namespace Coaster;
 
