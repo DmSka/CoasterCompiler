@@ -1,9 +1,48 @@
+/**
+ * @file TagGenerator.cpp   
+ * @brief Defines the TagGenerator class for creating tag structures.
+ * @details This source file contains the implementation for the TagGenerator class.
+ * @author Dominic Saksa
+ * @date 2026-09-17
+ */
+
+#include "TagGenerator.h"
+#include "Element.h"
+#include "WaveSample.h"
+#include "Tag.h"
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
+
 namespace Coaster
 {
 
 class TagGenerator
 {
 public:
+
+    bool HasTwoNegativePeaks(
+        const std::vector<WaveSample>& wave)
+    {
+        int peaks = 0;
+        bool wasNegative = false;
+
+        for (const auto& sample : wave)
+        {
+            bool negative =
+                sample.verticalG < -0.1;
+
+            if (negative && !wasNegative)
+            {
+                peaks++;
+            }
+
+            wasNegative = negative;
+        }
+
+        return peaks >= 2;
+    }
 
     void GenerateTags(Element& element)
     {
@@ -68,14 +107,6 @@ private:
 
             element.tags.push_back(tag);
         }
-    }
-
-
-    void GenerateVerticalTags(Element& element)
-    {
-        double duration =
-            element.endTime - element.startTime;
-
 
         // Stop
         if (element.averageSpeed < 0.1)
@@ -86,6 +117,38 @@ private:
             });
         }
 
+    }
+
+
+    void GenerateVerticalTags(Element& element)
+    {
+        double duration =
+            element.endTime - element.startTime;
+
+
+        //check for double elements
+        //double up or double down
+        if (!HasTwoNegativePeaks(element.wave))
+            return;
+
+        double heightDelta =
+            element.endHeight -
+            element.startHeight;
+
+        if (heightDelta < 0)
+        {
+            element.tags.push_back({
+                TagType::DoubleDown,
+                "Double down"
+            });
+        }
+        else if (heightDelta > 0)
+        {
+            element.tags.push_back({
+                TagType::DoubleUp,
+                "Double up"
+            });
+        }
 
         // Drop
         if (element.averageVerticalG < 0.8 &&

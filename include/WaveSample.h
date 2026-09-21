@@ -1,3 +1,11 @@
+/**
+ * @file WaveSample.h
+ * @brief Defines the WaveSample structure for representing individual wave samples.
+ * @details This header contains the definition for wave samples used in the analysis.
+ * @author Dominic Saksa
+ * @date 2026-09-17
+ */
+
 struct WaveSample
 {
     double time = 0.0;

@@ -1,3 +1,11 @@
+/**
+ * @file Tag.h
+ * @brief Defines the Tag structure and TagType enumeration.
+ * @details This header contains the definition for tags used in the parser.
+ * @author Dominic Saksa
+ * @date 2026-09-17
+ */
+
 #include <string>
 
 enum class TagType

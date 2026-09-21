@@ -30,21 +30,67 @@ The icon files are intentionally blank template PNG files. Replace them with you
 
 Open index.html in a browser.
 
+
 ## Code Generation
 
-This portion will take in the coaster data and generate C++ code from the layout
+This portion will take in the coaster data and generate C++ code from the layout.
+
+
+### Tokens and Tags
+
+Tokens are created from tags associated with each track element.
+
+| Category | Token | Track Tag(s) | Meaning |
+|---|---|---|---|
+| **Type** | `int` | Floater | Integer value |
+| **Type** | `string` | Ejector | String / character value |
+| **Mathematics** | `+` | Stall | Addition |
+| **Mathematics** | `-` | Right turn, Banking | Subtraction |
+| **Mathematics** | `=` | Left turn, Banking | Assignment |
+| **Boolean** | `if` | Double down | Conditional statement |
+| **Boolean** | `for` | Double up | For loop |
+| **Boolean** | `while` | Double inversion | While loop |
+| **Semantics** | `;` | Acceleration | End of statement |
+| **Semantics** | `(` | Ejector, Banking, Left turn | Start of expression |
+| **Semantics** | `)` | Ejector, Banking, Right turn | End of expression |
+| **I/O** | `print` | Station block | Output |
+| **I/O** | `input` | Chain lift block | User input |
+| **Value** | Start | Stop | Beginning of encoded value |
+| **Value** | Type | Left turn | Integer |
+| **Value** | Type | Straight | ASCII character |
+| **Value** | Type | Right turn | Hexadecimal |
+| **Value** | Value | Drop height | Encoded value |
+| **Value** | End | Stop | End of encoded value |
 
 ### Software Architecture
 
 This is an outline of the software architecture used to produce the code
 
-#### Wave Pattern Detector
-
 #### Element Generator
+
+This will take in the inputs for the graphs, and using straight track pieces, generate elements with their own information:
+    - start time
+    - end time
+    - average lateral g
+    - average vertical g
+    - average forward g
+    - average speed
+    - speed delta
+    - start height
+    - end height
+    - average height
+    - start banking
+    - end banking
+    - average banking
 
 #### Tag Generator
 
+Each of these elements is analyized for create tags for their information.
+
 #### Tokenizer
+
+Takes tags and creates tokens for their elements. 
+needs to be implemented
 
 ### Run
 

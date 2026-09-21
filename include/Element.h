@@ -1,3 +1,12 @@
+/**
+ * @file Element.h
+ * @brief Defines the Element structure for representing segments of a roller coaster ride.
+ * @details The Element structure contains information about the time interval, average forces, speed, height, and associated wave samples and tags.
+ * @author Dominic Saksa
+ * @date 2026-09-17
+ */
+
+
 #include <vector>
 #include "WaveSample.h"
 #include "Tag.h"
