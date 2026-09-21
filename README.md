@@ -12,15 +12,15 @@ index.html
 style.css
 app.js
 
-icons/
-    station.png
-    straight.png
-    drop.png
-    turn-left.png
-    turn-right.png
-    lift.png
-    launch.png
-    inversion.png
+| Icons |
+| station.png |
+| straight.png |
+| drop.png |
+| turn-left.png |
+| turn-right.png |
+| lift.png |
+| launch.png |
+| inversion.png |
 
 ### Icons
 
@@ -69,19 +69,24 @@ This is an outline of the software architecture used to produce the code
 #### Element Generator
 
 This will take in the inputs for the graphs, and using straight track pieces, generate elements with their own information:
-    - start time
-    - end time
-    - average lateral g
-    - average vertical g
-    - average forward g
-    - average speed
-    - speed delta
-    - start height
-    - end height
-    - average height
-    - start banking
-    - end banking
-    - average banking
+
+### Element Information
+
+| Element Information | Unit |
+|---|---|
+| **Start Time** | `seconds` |
+| **End Time** | `seconds` |
+| **Average Lateral G** | `g` |
+| **Average Vertical G** | `g` |
+| **Average Forward G** | `g` |
+| **Average Speed** | `mph` |
+| **Speed Delta** | `mph` |
+| **Start Height** | `feet` |
+| **End Height** | `feet` |
+| **Average Height** | `feet` |
+| **Start Banking** | `degrees` |
+| **End Banking** | `degrees` |
+| **Average Banking** | `degrees` |
 
 #### Tag Generator
 
