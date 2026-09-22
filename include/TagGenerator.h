@@ -11,6 +11,62 @@
 #include "Element.h"
 #include "Tag.h"
 
+//function - generate tags for each element
+/*
+    large switch to check for element tags
+        - add tag right turn if
+            positive lateral g force
+
+        - add tag left turn if
+            negative lateral g force
+
+        - add tag acceleration if
+            positive forward g force
+
+        - add tag deceleration if
+            negative forward g force
+
+        - add tag stop if
+            speed is 0
+
+        - add tag drop if
+            negative vertical g force
+            value is based on start height - end height
+
+        - add tag floater if 
+            0 vertical g force
+            magnitude depends on time spent in floater
+
+        - add tag ejector if 
+            negative vertical g force
+            magnitude depends on time spent in ejector
+
+        - add tag valley if
+            positive vertical g force
+
+        - add tag stall if
+            average banking angle is around 180
+
+        - add tag inversion if
+            banking contains around 180 or -180
+        
+        - add tag banking if
+            average banking angle is not around 0 or 180
+            magnitude is based on the average banking angle
+
+        - add tag double down if
+            has two negative vertical g force peaks in a row
+            height delta is negative
+
+        - add tag double up if
+            has two negative vertical g force peaks in a row
+            height delta is positive
+
+        - add tag double inversion if
+            banking delta is above or below around 360 or -360
+
+*/
+
 namespace Coaster
 {
 

@@ -8,6 +8,21 @@
 
 #include <string>
 
+
+//tags
+/*
+    Struct that stores
+        - tag name
+        - tag description
+        
+        - has magintude (default false)
+        - tag magnitude (small, medium, large)
+
+        - has value (default false)
+        - value (applicable for drops)
+
+*/
+
 enum class TagType
 {
     RightTurn,
