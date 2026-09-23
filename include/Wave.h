@@ -15,25 +15,59 @@ class Wave
 {
 public:
 
-    // Add a sample to the wave
+    // Data
     void AddSample(const WaveSample& sample);
 
-    // Get the sample closest to a specific time
+    const std::vector<WaveSample>&
+    GetSamples() const;
+
+    void Clear();
+
+
+    // Time
+    double GetStartTime() const;
+    double GetEndTime() const;
+
+
+    // Values at time
     WaveSample GetSample(double time) const;
 
-    // Get interpolated values at a specific time
     double GetVerticalG(double time) const;
     double GetLateralG(double time) const;
     double GetForwardG(double time) const;
+
     double GetSpeed(double time) const;
     double GetHeight(double time) const;
     double GetBanking(double time) const;
 
-    // Get information about the wave
-    double GetStartTime() const;
-    double GetEndTime() const;
 
-    // Analysis
+    // Averages
+    double GetAverageVerticalG(
+        double startTime,
+        double endTime) const;
+
+    double GetAverageLateralG(
+        double startTime,
+        double endTime) const;
+
+    double GetAverageForwardG(
+        double startTime,
+        double endTime) const;
+
+    double GetAverageSpeed(
+        double startTime,
+        double endTime) const;
+
+    double GetAverageHeight(
+        double startTime,
+        double endTime) const;
+
+    double GetAverageBanking(
+        double startTime,
+        double endTime) const;
+
+
+    // Min/max
     double GetMaximumVerticalG(
         double startTime,
         double endTime) const;
@@ -42,23 +76,20 @@ public:
         double startTime,
         double endTime) const;
 
-    double GetAverageVerticalG(
+
+    // Sections
+    Wave GetSection(
         double startTime,
         double endTime) const;
 
-    // Access to raw samples
-    const std::vector<WaveSample>& GetSamples() const;
 
-    // Clear wave
-    void Clear();
-
+    // Wave analysis
     bool HasTwoNegativeVerticalPeaks() const;
 
 private:
 
     std::vector<WaveSample> samples;
 
-    // Linear interpolation helper
     double Interpolate(
         double time,
         double WaveSample::*value) const;

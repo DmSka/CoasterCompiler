@@ -22,4 +22,10 @@ class ElementGenerator
 
     private:
 
+        bool IsStraight(
+            const WaveSample& sample) const;
+
+        void AnalyzeElement(
+            Element& element,
+            const Wave& wave) const;
  };

@@ -38,8 +38,8 @@ int main()
     }
 
     //generate tokens from the elements
-    Tokenizer tokenizer;
-    auto tokens = tokenizer.Tokenize(elements);
+    //Tokenizer tokenizer;
+    //auto tokens = tokenizer.Tokenize(elements);
 
     return 0;
 }

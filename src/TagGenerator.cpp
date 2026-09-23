@@ -45,9 +45,9 @@ void TagGenerator::GenerateTags(Element& element)
 
     GenerateTurnTags(element);
     GenerateAccelerationTags(element);
-    GenerateVerticalTags(element);
-    GenerateBankingTags(element);
-    GenerateSpecialTags(element);
+    //GenerateVerticalTags(element);
+    //GenerateBankingTags(element);
+    //GenerateSpecialTags(element);
 }
 
 
