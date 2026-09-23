@@ -1,0 +1,20 @@
+# 1. Set the minimum version of CMake required to build the project
+cmake_minimum_required(VERSION 3.10)
+
+# 2. Set the project name and programming language
+project(CoasterCompiler LANGUAGES CXX)
+
+# 3. Specify the C++ standard (e.g., C++17 or C++20)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 4. Define your executable and list ALL source files needed to build it
+add_executable(CoasterCompiler
+    src/main.cpp 
+    src/ElementGenerator.cpp
+    src/TagGenerator.cpp
+    src/Tokenizer.cpp
+)
+
+# 2. Tell CMake where to look for header files (.h) when compiling this target
+target_include_directories(CoasterCompiler PRIVATE include)
