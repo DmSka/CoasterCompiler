@@ -1,36 +1,940 @@
-* { box-sizing: border-box; }
-body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #222; background: #f5f5f5; }
-header { height: 60px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; background: white; border-bottom: 1px solid #d8d8d8; }
-h1 { margin: 0; font-size: 20px; font-weight: 600; }
-h2 { margin: 0 0 18px; font-size: 18px; font-weight: 600; }
-h3 { margin: 0 0 12px; font-size: 13px; font-weight: 600; }
-nav, .data-actions { display: flex; gap: 6px; }
-button { padding: 7px 12px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer; }
-button:hover { background: #f0f0f0; }
-main { width: min(1200px, calc(100% - 40px)); margin: 20px auto; }
-section { background: white; border: 1px solid #d8d8d8; border-radius: 5px; margin-bottom: 18px; padding: 18px; }
-.workspace { display: grid; grid-template-columns: 180px 1fr; min-height: 250px; border: 1px solid #ddd; }
-.track-library { padding: 12px; border-right: 1px solid #ddd; background: #fafafa; }
-.track-piece { display: flex; align-items: center; gap: 8px; height: 42px; padding: 5px; margin-bottom: 5px; border: 1px solid #ddd; background: white; border-radius: 3px; cursor: grab; font-size: 12px; }
-.track-piece:hover { border-color: #999; }
-.track-piece img { width: 28px; height: 28px; object-fit: contain; background: #eee; border: 1px solid #ddd; }
-.coaster-area { padding: 12px; min-width: 0; }
-.track-sequence { min-height: 205px; display: flex; align-items: center; gap: 8px; padding: 15px; overflow-x: auto; border: 1px dashed #bbb; background: linear-gradient(#eee 1px, transparent 1px), linear-gradient(90deg, #eee 1px, transparent 1px); background-size: 20px 20px; }
-#emptyMessage { width: 100%; text-align: center; color: #999; font-size: 12px; }
-.sequence-piece { flex: 0 0 90px; height: 75px; padding: 6px; text-align: center; border: 1px solid #aaa; background: white; border-radius: 3px; cursor: pointer; }
-.sequence-piece img { width: 32px; height: 32px; object-fit: contain; background: #eee; border: 1px solid #ddd; }
-.sequence-piece div { font-size: 10px; margin-top: 3px; }
-.remove { color: #777; }
-.force-section { margin-top: 18px; }
-.force-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-.force-header h3 { margin: 0; }
-.graph-tabs { display: flex; border-bottom: 1px solid #ccc; margin-bottom: 10px; }
-.graph-tab { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: white; color: #555; }
-.graph-tab.active { border-bottom-color: #222; color: #222; }
-.graph-panel { border: 1px solid #ddd; padding: 10px; }
-.graph-title-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px; color: #555; }
-#forceGraph { width: 100%; height: 230px; display: block; background: white; }
-.graph-note { margin: 8px 0 0; color: #777; font-size: 11px; }
-.tokenizer p, .compiler p { color: #666; font-size: 12px; }
-pre { margin: 0; min-height: 110px; padding: 12px; overflow: auto; background: #f7f7f7; border: 1px solid #ddd; font: 12px/1.5 Consolas, "Courier New", monospace; }
-@media (max-width: 700px) { .workspace { grid-template-columns: 1fr; } .track-library { border-right: 0; border-bottom: 1px solid #ddd; } main { width: calc(100% - 20px); } .force-header { align-items: flex-start; flex-direction: column; } }
+/* ============================================================
+   COASTER CODE
+   Main stylesheet
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 13px;
+
+    background: #d5d6e0;
+    color: #202020;
+}
+
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+
+.top-bar {
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 12px;
+
+    background: linear-gradient(
+        to bottom,
+        #f1f1f1 0%,
+        #d5d6e0 100%
+    );
+
+    border-bottom: 2px solid #7f858e;
+}
+
+.title {
+    font-size: 23px;
+    font-weight: bold;
+
+    margin-right: 30px;
+}
+
+.main-tabs {
+    display: flex;
+    height: 100%;
+    align-items: end;
+    gap: 3px;
+}
+
+.main-tab {
+    height: 34px;
+
+    padding: 0 24px;
+
+    font-family: Tahoma, Arial, sans-serif;
+    font-weight: bold;
+
+    background: linear-gradient(
+        to bottom,
+        #d8e5e7 0%,
+        #bfd5d8 50%,
+        #a8bec2 100%
+    );
+
+    border: 2px solid;
+    border-color:
+        #ffffff
+        #6f7b82
+        #6f7b82
+        #ffffff;
+
+    cursor: pointer;
+}
+
+.main-tab:hover {
+    background: linear-gradient(
+        to bottom,
+        #e4edef 0%,
+        #cadde0 50%,
+        #b3c9cd 100%
+    );
+}
+
+.main-tab.active {
+    color: white;
+
+    background: linear-gradient(
+        to bottom,
+        #74afe5 0%,
+        #5095db 50%,
+        #367abd 100%
+    );
+
+    border-color:
+        #315e83
+        #ffffff
+        #ffffff
+        #315e83;
+
+    box-shadow:
+        inset 1px 1px 0 #286ba7,
+        inset -1px -1px 0 #8ec2ed;
+}
+
+
+/* ============================================================
+   PAGES
+   ============================================================ */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+
+/* ============================================================
+   EDITOR
+   ============================================================ */
+
+.editor-layout {
+    display: grid;
+
+    grid-template-columns: 310px minmax(600px, 1fr);
+
+    gap: 8px;
+
+    padding: 8px;
+
+    min-height: 750px;
+}
+
+
+/* ============================================================
+   PANELS
+   ============================================================ */
+
+.track-editor,
+.world-panel,
+.data-panel,
+.tool-panel {
+    background: #f1f1f1;
+
+    border: 2px solid;
+
+    border-color:
+        #ffffff
+        #72777f
+        #72777f
+        #ffffff;
+
+    box-shadow:
+        inset 1px 1px 0 #ffffff,
+        inset -1px -1px 0 #b0b3b8;
+}
+
+.panel-title {
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 9px;
+
+    color: white;
+
+    font-weight: bold;
+
+    background: linear-gradient(
+        to bottom,
+        #6ba6df 0%,
+        #5095db 50%,
+        #3b7ebc 100%
+    );
+
+    border-bottom: 2px solid #315f85;
+}
+
+
+/* ============================================================
+   TRACK EDITOR
+   ============================================================ */
+
+.track-editor {
+    min-width: 0;
+}
+
+.control-section {
+    padding: 8px 8px 4px;
+}
+
+.control-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.button-row {
+    display: flex;
+    gap: 5px;
+}
+
+.button-grid {
+    display: grid;
+    gap: 5px;
+}
+
+.slope-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.operation-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+
+/* ============================================================
+   TRACK BUTTONS
+   ============================================================ */
+
+.track-button {
+    width: 52px;
+    height: 45px;
+
+    padding: 4px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(
+        to bottom,
+        #d9e6e8 0%,
+        #bfd5d8 48%,
+        #a6bdc1 100%
+    );
+
+    border: 2px solid;
+
+    border-color:
+        #ffffff
+        #68767c
+        #68767c
+        #ffffff;
+
+    box-shadow:
+        inset 1px 1px 0 #ffffff,
+        inset -1px -1px 0 #91a4a8;
+
+    cursor: pointer;
+}
+
+.track-button:hover {
+    background: linear-gradient(
+        to bottom,
+        #e7eff0 0%,
+        #cadde0 48%,
+        #b3c8cc 100%
+    );
+}
+
+.track-button.active {
+    background: linear-gradient(
+        to bottom,
+        #76b0e6 0%,
+        #5095db 48%,
+        #367abd 100%
+    );
+
+    border-color:
+        #315e82
+        #ffffff
+        #ffffff
+        #315e82;
+
+    box-shadow:
+        inset 1px 1px 0 #286aa4,
+        inset -1px -1px 0 #91c2ec;
+}
+
+.slope-grid .track-button {
+    width: auto;
+}
+
+
+/* ============================================================
+   ICONS
+   ============================================================ */
+
+.icon {
+    width: 30px;
+    height: 25px;
+
+    display: block;
+
+    position: relative;
+}
+
+
+/*
+   All icons are drawn with CSS.
+   These are temporary representations and can
+   eventually be replaced by image sprites.
+*/
+
+
+/* Direction */
+
+.direction-straight::before {
+    content: "";
+
+    position: absolute;
+
+    width: 26px;
+    height: 5px;
+
+    left: 2px;
+    top: 10px;
+
+    background: #30383d;
+
+    border-top: 2px solid #737b80;
+    border-bottom: 2px solid #161a1d;
+}
+
+.direction-left::before {
+    content: "";
+
+    position: absolute;
+
+    width: 20px;
+    height: 15px;
+
+    left: 3px;
+    top: 4px;
+
+    border-left: 4px solid #30383d;
+    border-bottom: 4px solid #30383d;
+
+    transform: skewY(-25deg);
+}
+
+.direction-right::before {
+    content: "";
+
+    position: absolute;
+
+    width: 20px;
+    height: 15px;
+
+    right: 3px;
+    top: 4px;
+
+    border-right: 4px solid #30383d;
+    border-bottom: 4px solid #30383d;
+
+    transform: skewY(25deg);
+}
+
+
+/* Slope */
+
+.slope-down-vertical::before,
+.slope-down-steep::before,
+.slope-down-shallow::before,
+.slope-straight::before,
+.slope-up-shallow::before,
+.slope-up-steep::before,
+.slope-up-vertical::before {
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 5px;
+
+    left: 1px;
+    top: 10px;
+
+    background: #30383d;
+
+    border-top: 2px solid #737b80;
+    border-bottom: 2px solid #161a1d;
+
+    transform-origin: center;
+}
+
+.slope-down-vertical::before {
+    transform: rotate(65deg);
+}
+
+.slope-down-steep::before {
+    transform: rotate(40deg);
+}
+
+.slope-down-shallow::before {
+    transform: rotate(18deg);
+}
+
+.slope-straight::before {
+    transform: rotate(0deg);
+}
+
+.slope-up-shallow::before {
+    transform: rotate(-18deg);
+}
+
+.slope-up-steep::before {
+    transform: rotate(-40deg);
+}
+
+.slope-up-vertical::before {
+    transform: rotate(-65deg);
+}
+
+
+/* Banking */
+
+.bank-none::before {
+    content: "";
+
+    position: absolute;
+
+    width: 28px;
+    height: 5px;
+
+    left: 1px;
+    top: 10px;
+
+    background: #30383d;
+}
+
+.bank-left::before {
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 5px;
+
+    left: 1px;
+    top: 10px;
+
+    background: #30383d;
+
+    transform: rotate(-18deg);
+}
+
+.bank-right::before {
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 5px;
+
+    left: 1px;
+    top: 10px;
+
+    background: #30383d;
+
+    transform: rotate(18deg);
+}
+
+.bank-vertical-left::before {
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 5px;
+
+    left: 1px;
+    top: 10px;
+
+    background: #30383d;
+
+    transform: rotate(-65deg);
+}
+
+.bank-vertical-right::before {
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 5px;
+
+    left: 1px;
+    top: 10px;
+
+    background: #30383d;
+
+    transform: rotate(65deg);
+}
+
+
+/* Operations */
+
+.operation-none::before {
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 5px;
+
+    left: 1px;
+    top: 10px;
+
+    background: #30383d;
+}
+
+.operation-launch::before {
+    content: "L";
+
+    position: absolute;
+
+    left: 8px;
+    top: 0;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    color: #30383d;
+}
+
+.operation-lift::before {
+    content: "U";
+
+    position: absolute;
+
+    left: 6px;
+    top: 0;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    color: #30383d;
+}
+
+.operation-brake::before {
+    content: "B";
+
+    position: absolute;
+
+    left: 7px;
+    top: 0;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    color: #30383d;
+}
+
+
+/* ============================================================
+   PREVIEW
+   ============================================================ */
+
+.preview-section {
+    padding: 7px 8px;
+}
+
+.piece-preview {
+    height: 180px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #aeb6a3 0%,
+            #909b82 100%
+        );
+
+    border: 2px solid;
+
+    border-color:
+        #626b5c
+        #ffffff
+        #ffffff
+        #626b5c;
+
+    overflow: hidden;
+}
+
+#previewCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+
+/* ============================================================
+   BUILD BUTTON
+   ============================================================ */
+
+.build-button {
+    width: calc(100% - 16px);
+    height: 48px;
+
+    margin: 4px 8px 8px;
+
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+
+    color: white;
+
+    background: linear-gradient(
+        to bottom,
+        #75afe5 0%,
+        #5095db 50%,
+        #3679bd 100%
+    );
+
+    border: 2px solid;
+
+    border-color:
+        #8fc3ec
+        #2c5c85
+        #2c5c85
+        #8fc3ec;
+
+    box-shadow:
+        inset 1px 1px 0 #b7dbf6,
+        inset -1px -1px 0 #275d91;
+
+    cursor: pointer;
+}
+
+.build-button:hover {
+    background: linear-gradient(
+        to bottom,
+        #87bbed 0%,
+        #5da0e2 50%,
+        #4086c7 100%
+    );
+}
+
+.build-button:active {
+    border-color:
+        #2c5c85
+        #8fc3ec
+        #8fc3ec
+        #2c5c85;
+
+    box-shadow:
+        inset 2px 2px 2px #275d91;
+}
+
+
+/* ============================================================
+   UTILITY BUTTONS
+   ============================================================ */
+
+.editor-actions {
+    display: flex;
+    gap: 5px;
+
+    padding: 0 8px 8px;
+}
+
+.utility-button {
+    min-height: 28px;
+
+    padding: 3px 12px;
+
+    font-family: Tahoma, Arial, sans-serif;
+
+    background: linear-gradient(
+        to bottom,
+        #d9e6e8 0%,
+        #bfd5d8 50%,
+        #a8bec2 100%
+    );
+
+    border: 2px solid;
+
+    border-color:
+        #ffffff
+        #68767c
+        #68767c
+        #ffffff;
+
+    cursor: pointer;
+}
+
+.utility-button:active {
+    border-color:
+        #68767c
+        #ffffff
+        #ffffff
+        #68767c;
+}
+
+
+/* ============================================================
+   WORLD PANEL
+   ============================================================ */
+
+.world-panel {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.world-toolbar {
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px;
+
+    background: #d5d6e0;
+
+    border-bottom: 1px solid #858b93;
+}
+
+.world-container {
+    flex: 1;
+
+    min-height: 600px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: #89947c;
+}
+
+#worldCanvas {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+}
+
+.status-bar {
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 8px;
+
+    background: #d5d6e0;
+
+    border-top: 2px solid #ffffff;
+}
+
+
+/* ============================================================
+   DATA PANEL
+   ============================================================ */
+
+.data-panel {
+    margin: 0 8px 8px;
+}
+
+.graph-tabs {
+    display: flex;
+
+    padding: 5px;
+
+    gap: 3px;
+
+    background: #d5d6e0;
+}
+
+.graph-tab {
+    padding: 6px 16px;
+
+    background: linear-gradient(
+        to bottom,
+        #d9e6e8 0%,
+        #bfd5d8 50%,
+        #a8bec2 100%
+    );
+
+    border: 2px solid;
+
+    border-color:
+        #ffffff
+        #68767c
+        #68767c
+        #ffffff;
+
+    cursor: pointer;
+}
+
+.graph-tab.active {
+    color: white;
+
+    background: linear-gradient(
+        to bottom,
+        #75afe5 0%,
+        #5095db 50%,
+        #367abd 100%
+    );
+}
+
+.graph-container {
+    height: 280px;
+
+    margin: 5px;
+
+    border: 2px solid;
+
+    border-color:
+        #687067
+        #ffffff
+        #ffffff
+        #687067;
+
+    background: #252a2c;
+}
+
+#graphCanvas {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+}
+
+
+/* ============================================================
+   TOKENIZER / COMPILER
+   ============================================================ */
+
+.tool-panel {
+    margin: 8px;
+}
+
+.tokenizer-layout,
+.compiler-layout {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    padding: 10px;
+}
+
+.tokenizer-layout > div,
+.compiler-layout > div {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+
+    margin-bottom: 5px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 500px;
+
+    resize: vertical;
+
+    padding: 8px;
+
+    font-family: Consolas, monospace;
+    font-size: 13px;
+
+    background: white;
+
+    border: 2px solid;
+
+    border-color:
+        #687078
+        #ffffff
+        #ffffff
+        #687078;
+
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #5095db;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .editor-layout {
+        grid-template-columns: 280px 1fr;
+    }
+
+    .track-button {
+        width: 46px;
+    }
+
+    .slope-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .editor-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .world-panel {
+        min-height: 600px;
+    }
+
+    .tokenizer-layout,
+    .compiler-layout {
+        grid-template-columns: 1fr;
+    }
+
+}

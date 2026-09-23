@@ -6,6 +6,8 @@ A roller-coaster editor and programming language that uses coaster track layouts
 
 The Coaster Editor is the front-end portion of the project. It allows users to build custom roller-coaster layouts by placing and connecting predefined track pieces.
 
+Within the Editor there 
+
 The completed layout can be simulated to produce:
 
 - Vertical G-force

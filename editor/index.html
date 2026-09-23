@@ -3,83 +3,531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Coaster Code</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<header>
-    <h1></h1>
-    <nav>
-        <button>Editor</button>
-        <button>Tokenizer</button>
-        <button>Compiler</button>
+
+<header class="top-bar">
+    <div class="title">Coaster Code</div>
+
+    <nav class="main-tabs">
+        <button class="main-tab active" data-page="editor">Editor</button>
+        <button class="main-tab" data-page="tokenizer">Tokenizer</button>
+        <button class="main-tab" data-page="compiler">Compiler</button>
     </nav>
 </header>
 
-<main>
-    <section class="editor">
-        <h2>Coaster Editor</h2>
-        <div class="workspace">
-            <aside class="track-library">
-                <h3>Track Pieces</h3>
-                <div class="track-piece" draggable="true" data-piece="station"><img src="icons/station.png" alt=""><span>Station</span></div>
-                <div class="track-piece" draggable="true" data-piece="straight"><img src="icons/straight.png" alt=""><span>Straight</span></div>
-                <div class="track-piece" draggable="true" data-piece="drop"><img src="icons/drop.png" alt=""><span>Drop</span></div>
-                <div class="track-piece" draggable="true" data-piece="turn-left"><img src="icons/turn-left.png" alt=""><span>Left Turn</span></div>
-                <div class="track-piece" draggable="true" data-piece="turn-right"><img src="icons/turn-right.png" alt=""><span>Right Turn</span></div>
-                <div class="track-piece" draggable="true" data-piece="lift"><img src="icons/lift.png" alt=""><span>Chain Lift</span></div>
-                <div class="track-piece" draggable="true" data-piece="launch"><img src="icons/launch.png" alt=""><span>Launch</span></div>
-                <div class="track-piece" draggable="true" data-piece="inversion"><img src="icons/inversion.png" alt=""><span>Inversion</span></div>
-                <div class="track-piece" draggable="true" data-piece="brake"><img src="icons/brake.png" alt=""><span>Brake</span></div>
-                <div class="track-piece" draggable="true" data-piece="block-brake"><img src="icons/block-brake.png" alt=""><span>Block Brake</span></div>
-            </aside>
 
-            <section class="coaster-area">
-                <h3>Track Sequence</h3>
-                <div id="trackSequence" class="track-sequence">
-                    <p id="emptyMessage">Drag track pieces here.</p>
+<!-- ============================================================
+     EDITOR
+     ============================================================ -->
+
+<main id="editor" class="page active">
+
+    <div class="editor-layout">
+
+        <!-- ====================================================
+             LEFT TRACK EDITOR
+             ==================================================== -->
+
+        <aside class="track-editor">
+
+            <div class="panel-title">
+                Track Editor
+            </div>
+
+
+            <!-- Direction -->
+
+            <section class="control-section">
+
+                <div class="control-title">
+                    Direction
                 </div>
+
+                <div class="button-row">
+
+                    <button
+                        class="track-button active"
+                        data-group="direction"
+                        data-value="left"
+                        title="Left">
+
+                        <span class="icon direction-left"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="direction"
+                        data-value="straight"
+                        title="Straight">
+
+                        <span class="icon direction-straight"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="direction"
+                        data-value="right"
+                        title="Right">
+
+                        <span class="icon direction-right"></span>
+
+                    </button>
+
+                </div>
+
             </section>
+
+
+            <!-- Slope -->
+
+            <section class="control-section">
+
+                <div class="control-title">
+                    Slope
+                </div>
+
+                <div class="button-grid slope-grid">
+
+                    <button
+                        class="track-button"
+                        data-group="slope"
+                        data-value="down-vertical"
+                        title="Down Vertical">
+
+                        <span class="icon slope-down-vertical"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="slope"
+                        data-value="down-steep"
+                        title="Down Steep">
+
+                        <span class="icon slope-down-steep"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="slope"
+                        data-value="down-shallow"
+                        title="Down Shallow">
+
+                        <span class="icon slope-down-shallow"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button active"
+                        data-group="slope"
+                        data-value="straight"
+                        title="Straight">
+
+                        <span class="icon slope-straight"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="slope"
+                        data-value="up-shallow"
+                        title="Up Shallow">
+
+                        <span class="icon slope-up-shallow"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="slope"
+                        data-value="up-steep"
+                        title="Up Steep">
+
+                        <span class="icon slope-up-steep"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="slope"
+                        data-value="up-vertical"
+                        title="Up Vertical">
+
+                        <span class="icon slope-up-vertical"></span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- Banking -->
+
+            <section class="control-section">
+
+                <div class="control-title">
+                    Banking
+                </div>
+
+                <div class="button-row">
+
+                    <button
+                        class="track-button"
+                        data-group="banking"
+                        data-value="vertical-left"
+                        title="Vertical Left">
+
+                        <span class="icon bank-vertical-left"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="banking"
+                        data-value="left"
+                        title="Left">
+
+                        <span class="icon bank-left"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button active"
+                        data-group="banking"
+                        data-value="none"
+                        title="None">
+
+                        <span class="icon bank-none"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="banking"
+                        data-value="right"
+                        title="Right">
+
+                        <span class="icon bank-right"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="banking"
+                        data-value="vertical-right"
+                        title="Vertical Right">
+
+                        <span class="icon bank-vertical-right"></span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- Operation -->
+
+            <section class="control-section">
+
+                <div class="control-title">
+                    Launch / Lift / Brakes
+                </div>
+
+                <div class="button-row operation-row">
+
+                    <button
+                        class="track-button active"
+                        data-group="operation"
+                        data-value="none"
+                        title="Normal Track">
+
+                        <span class="icon operation-none"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="operation"
+                        data-value="launch"
+                        title="Launch">
+
+                        <span class="icon operation-launch"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="operation"
+                        data-value="lift"
+                        title="Lift">
+
+                        <span class="icon operation-lift"></span>
+
+                    </button>
+
+                    <button
+                        class="track-button"
+                        data-group="operation"
+                        data-value="brake"
+                        title="Brake">
+
+                        <span class="icon operation-brake"></span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- Piece Preview -->
+
+            <section class="preview-section">
+
+                <div class="control-title">
+                    Piece Preview
+                </div>
+
+                <div class="piece-preview">
+                    <canvas
+                        id="previewCanvas"
+                        width="260"
+                        height="180">
+                    </canvas>
+                </div>
+
+            </section>
+
+
+            <!-- Build -->
+
+            <button id="buildButton" class="build-button">
+                BUILD
+            </button>
+
+
+            <!-- Utility buttons -->
+
+            <div class="editor-actions">
+
+                <button id="undoButton" class="utility-button">
+                    Undo
+                </button>
+
+                <button id="clearButton" class="utility-button">
+                    Clear
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ====================================================
+             CENTER ISOMETRIC VIEW
+             ==================================================== -->
+
+        <section class="world-panel">
+
+            <div class="panel-title">
+                Coaster Layout
+            </div>
+
+            <div class="world-toolbar">
+
+                <button id="saveJsonButton" class="utility-button">
+                    Save JSON
+                </button>
+
+                <button id="saveCsvButton" class="utility-button">
+                    Save CSV
+                </button>
+
+            </div>
+
+            <div class="world-container">
+
+                <canvas
+                    id="worldCanvas"
+                    width="1100"
+                    height="720">
+                </canvas>
+
+            </div>
+
+            <div class="status-bar">
+
+                <span id="statusText">
+                    Ready
+                </span>
+
+                <span id="pieceCount">
+                    Pieces: 0
+                </span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ========================================================
+         DATA / GRAPHS
+         ======================================================== -->
+
+    <section class="data-panel">
+
+        <div class="panel-title">
+            Simulation Data
         </div>
 
-        <div class="force-section">
-            <div class="force-header">
-                <h3>Coaster Data</h3>
-                <div class="data-actions">
-                    <button id="saveJson">Save JSON</button>
-                    <button id="saveCsv">Save CSV</button>
-                </div>
-            </div>
+        <div class="graph-tabs">
 
-            <div class="graph-tabs" role="tablist">
-                <button class="graph-tab active" data-graph="vertical">Vertical</button>
-                <button class="graph-tab" data-graph="forward">Forward</button>
-                <button class="graph-tab" data-graph="lateral">Lateral</button>
-                <button class="graph-tab" data-graph="speed">Speed</button>
-            </div>
+            <button class="graph-tab active" data-graph="vertical">
+                Vertical
+            </button>
 
-            <div class="graph-panel">
-                <div class="graph-title-row">
-                    <strong id="graphTitle">Vertical G-force</strong>
-                    <span id="graphUnits">G</span>
-                </div>
-                <canvas id="forceGraph"></canvas>
-            </div>
+            <button class="graph-tab" data-graph="forward">
+                Forward
+            </button>
+
+            <button class="graph-tab" data-graph="lateral">
+                Lateral
+            </button>
+
+            <button class="graph-tab" data-graph="speed">
+                Speed
+            </button>
+
+            <button class="graph-tab" data-graph="height">
+                Height
+            </button>
+
+            <button class="graph-tab" data-graph="banking">
+                Banking
+            </button>
+
         </div>
+
+        <div class="graph-container">
+
+            <canvas
+                id="graphCanvas"
+                width="1200"
+                height="280">
+            </canvas>
+
+        </div>
+
     </section>
 
-    <section class="tokenizer">
-        <h2>G Force Tokenizer</h2>
-        <p>The coaster data will eventually be decoded into tokens using the four graphs and time information.</p>
-        <pre id="tokenOutput">// Tokens will appear here.</pre>
-    </section>
-
-    <section class="compiler">
-        <h2>Compiler</h2>
-        <p>Tokens will eventually be compiled into C++.</p>
-        <pre id="cppOutput">// C++ output will appear here.</pre>
-    </section>
 </main>
+
+
+<!-- ============================================================
+     TOKENIZER
+     ============================================================ -->
+
+<main id="tokenizer" class="page">
+
+    <div class="tool-panel">
+
+        <div class="panel-title">
+            Tokenizer
+        </div>
+
+        <div class="tokenizer-layout">
+
+            <div class="tokenizer-input">
+
+                <label for="tokenInput">
+                    Simulation Data
+                </label>
+
+                <textarea
+                    id="tokenInput"
+                    placeholder="Generated coaster data will appear here...">
+                </textarea>
+
+            </div>
+
+            <div class="tokenizer-output">
+
+                <label>
+                    Tokens
+                </label>
+
+                <pre id="tokenOutput"></pre>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- ============================================================
+     COMPILER
+     ============================================================ -->
+
+<main id="compiler" class="page">
+
+    <div class="tool-panel">
+
+        <div class="panel-title">
+            Compiler
+        </div>
+
+        <div class="compiler-layout">
+
+            <div>
+
+                <label for="compilerInput">
+                    Tokens
+                </label>
+
+                <textarea
+                    id="compilerInput"
+                    placeholder="Tokens will appear here...">
+                </textarea>
+
+            </div>
+
+            <div>
+
+                <label for="compilerOutput">
+                    Generated C++
+                </label>
+
+                <textarea
+                    id="compilerOutput"
+                    readonly>
+                </textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
 <script src="app.js"></script>
+
 </body>
 </html>
