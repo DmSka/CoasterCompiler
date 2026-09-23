@@ -1,24 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Coaster Code</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
 <header class="top-bar">
-    <div class="title">Coaster Code</div>
+
+    <div class="title">
+        Coaster Code
+    </div>
 
     <nav class="main-tabs">
-        <button class="main-tab active" data-page="editor">Editor</button>
-        <button class="main-tab" data-page="tokenizer">Tokenizer</button>
-        <button class="main-tab" data-page="compiler">Compiler</button>
+
+        <button
+            class="main-tab active"
+            data-page="editor">
+            Editor
+        </button>
+
+        <button
+            class="main-tab"
+            data-page="tokenizer">
+            Tokenizer
+        </button>
+
+        <button
+            class="main-tab"
+            data-page="compiler">
+            Compiler
+        </button>
+
     </nav>
+
 </header>
 
 
@@ -30,8 +56,9 @@
 
     <div class="editor-layout">
 
+
         <!-- ====================================================
-             LEFT TRACK EDITOR
+             TRACK EDITOR
              ==================================================== -->
 
         <aside class="track-editor">
@@ -41,7 +68,9 @@
             </div>
 
 
-            <!-- Direction -->
+            <!-- =================================================
+                 DIRECTION
+                 ================================================= -->
 
             <section class="control-section">
 
@@ -52,7 +81,7 @@
                 <div class="button-row">
 
                     <button
-                        class="track-button active"
+                        class="track-button"
                         data-group="direction"
                         data-value="left"
                         title="Left">
@@ -61,8 +90,9 @@
 
                     </button>
 
+
                     <button
-                        class="track-button"
+                        class="track-button active"
                         data-group="direction"
                         data-value="straight"
                         title="Straight">
@@ -70,6 +100,7 @@
                         <span class="icon direction-straight"></span>
 
                     </button>
+
 
                     <button
                         class="track-button"
@@ -86,7 +117,9 @@
             </section>
 
 
-            <!-- Slope -->
+            <!-- =================================================
+                 SLOPE
+                 ================================================= -->
 
             <section class="control-section">
 
@@ -94,7 +127,7 @@
                     Slope
                 </div>
 
-                <div class="button-grid slope-grid">
+                <div class="slope-grid">
 
                     <button
                         class="track-button"
@@ -106,6 +139,7 @@
 
                     </button>
 
+
                     <button
                         class="track-button"
                         data-group="slope"
@@ -115,6 +149,7 @@
                         <span class="icon slope-down-steep"></span>
 
                     </button>
+
 
                     <button
                         class="track-button"
@@ -126,6 +161,7 @@
 
                     </button>
 
+
                     <button
                         class="track-button active"
                         data-group="slope"
@@ -135,6 +171,7 @@
                         <span class="icon slope-straight"></span>
 
                     </button>
+
 
                     <button
                         class="track-button"
@@ -146,6 +183,7 @@
 
                     </button>
 
+
                     <button
                         class="track-button"
                         data-group="slope"
@@ -155,6 +193,7 @@
                         <span class="icon slope-up-steep"></span>
 
                     </button>
+
 
                     <button
                         class="track-button"
@@ -171,7 +210,9 @@
             </section>
 
 
-            <!-- Banking -->
+            <!-- =================================================
+                 BANKING
+                 ================================================= -->
 
             <section class="control-section">
 
@@ -191,6 +232,7 @@
 
                     </button>
 
+
                     <button
                         class="track-button"
                         data-group="banking"
@@ -200,6 +242,7 @@
                         <span class="icon bank-left"></span>
 
                     </button>
+
 
                     <button
                         class="track-button active"
@@ -211,6 +254,7 @@
 
                     </button>
 
+
                     <button
                         class="track-button"
                         data-group="banking"
@@ -220,6 +264,7 @@
                         <span class="icon bank-right"></span>
 
                     </button>
+
 
                     <button
                         class="track-button"
@@ -236,7 +281,9 @@
             </section>
 
 
-            <!-- Operation -->
+            <!-- =================================================
+                 OPERATION
+                 ================================================= -->
 
             <section class="control-section">
 
@@ -244,7 +291,8 @@
                     Launch / Lift / Brakes
                 </div>
 
-                <div class="button-row operation-row">
+                <div class="operation-row">
+
 
                     <button
                         class="track-button active"
@@ -256,6 +304,7 @@
 
                     </button>
 
+
                     <button
                         class="track-button"
                         data-group="operation"
@@ -266,6 +315,7 @@
 
                     </button>
 
+
                     <button
                         class="track-button"
                         data-group="operation"
@@ -275,6 +325,7 @@
                         <span class="icon operation-lift"></span>
 
                     </button>
+
 
                     <button
                         class="track-button"
@@ -291,7 +342,72 @@
             </section>
 
 
-            <!-- Piece Preview -->
+            <!-- =================================================
+                 OPERATION SETTINGS
+                 ================================================= -->
+
+            <section
+                id="operationSettings"
+                class="operation-settings hidden">
+
+                <div class="control-title">
+                    Operation Settings
+                </div>
+
+
+                <div class="input-row">
+
+                    <label for="operationSpeed">
+                        Speed
+                    </label>
+
+                    <div class="input-with-unit">
+
+                        <input
+                            id="operationSpeed"
+                            type="number"
+                            min="0"
+                            step="1"
+                            value="40">
+
+                        <span>
+                            mph
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-row">
+
+                    <label for="operationAcceleration">
+                        Acceleration
+                    </label>
+
+                    <div class="input-with-unit">
+
+                        <input
+                            id="operationAcceleration"
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            value="1.0">
+
+                        <span>
+                            g/s
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PIECE PREVIEW
+                 ================================================= -->
 
             <section class="preview-section">
 
@@ -300,33 +416,48 @@
                 </div>
 
                 <div class="piece-preview">
+
                     <canvas
                         id="previewCanvas"
                         width="260"
                         height="180">
                     </canvas>
+
                 </div>
 
             </section>
 
 
-            <!-- Build -->
+            <!-- =================================================
+                 BUILD
+                 ================================================= -->
 
-            <button id="buildButton" class="build-button">
+            <button
+                id="buildButton"
+                class="build-button">
+
                 BUILD
+
             </button>
 
 
-            <!-- Utility buttons -->
-
             <div class="editor-actions">
 
-                <button id="undoButton" class="utility-button">
+                <button
+                    id="undoButton"
+                    class="utility-button">
+
                     Undo
+
                 </button>
 
-                <button id="clearButton" class="utility-button">
+
+                <button
+                    id="clearButton"
+                    class="utility-button">
+
                     Clear
+
                 </button>
 
             </div>
@@ -335,7 +466,7 @@
 
 
         <!-- ====================================================
-             CENTER ISOMETRIC VIEW
+             WORLD
              ==================================================== -->
 
         <section class="world-panel">
@@ -344,17 +475,28 @@
                 Coaster Layout
             </div>
 
+
             <div class="world-toolbar">
 
-                <button id="saveJsonButton" class="utility-button">
+                <button
+                    id="saveJsonButton"
+                    class="utility-button">
+
                     Save JSON
+
                 </button>
 
-                <button id="saveCsvButton" class="utility-button">
+
+                <button
+                    id="saveCsvButton"
+                    class="utility-button">
+
                     Save CSV
+
                 </button>
 
             </div>
+
 
             <div class="world-container">
 
@@ -365,6 +507,7 @@
                 </canvas>
 
             </div>
+
 
             <div class="status-bar">
 
@@ -384,7 +527,7 @@
 
 
     <!-- ========================================================
-         DATA / GRAPHS
+         SIMULATION DATA
          ======================================================== -->
 
     <section class="data-panel">
@@ -393,33 +536,64 @@
             Simulation Data
         </div>
 
+
         <div class="graph-tabs">
 
-            <button class="graph-tab active" data-graph="vertical">
+            <button
+                class="graph-tab active"
+                data-graph="vertical">
+
                 Vertical
+
             </button>
 
-            <button class="graph-tab" data-graph="forward">
+
+            <button
+                class="graph-tab"
+                data-graph="forward">
+
                 Forward
+
             </button>
 
-            <button class="graph-tab" data-graph="lateral">
+
+            <button
+                class="graph-tab"
+                data-graph="lateral">
+
                 Lateral
+
             </button>
 
-            <button class="graph-tab" data-graph="speed">
+
+            <button
+                class="graph-tab"
+                data-graph="speed">
+
                 Speed
+
             </button>
 
-            <button class="graph-tab" data-graph="height">
+
+            <button
+                class="graph-tab"
+                data-graph="height">
+
                 Height
+
             </button>
 
-            <button class="graph-tab" data-graph="banking">
+
+            <button
+                class="graph-tab"
+                data-graph="banking">
+
                 Banking
+
             </button>
 
         </div>
+
 
         <div class="graph-container">
 
@@ -440,7 +614,9 @@
      TOKENIZER
      ============================================================ -->
 
-<main id="tokenizer" class="page">
+<main
+    id="tokenizer"
+    class="page">
 
     <div class="tool-panel">
 
@@ -448,9 +624,10 @@
             Tokenizer
         </div>
 
+
         <div class="tokenizer-layout">
 
-            <div class="tokenizer-input">
+            <div>
 
                 <label for="tokenInput">
                     Simulation Data
@@ -463,7 +640,8 @@
 
             </div>
 
-            <div class="tokenizer-output">
+
+            <div>
 
                 <label>
                     Tokens
@@ -484,13 +662,16 @@
      COMPILER
      ============================================================ -->
 
-<main id="compiler" class="page">
+<main
+    id="compiler"
+    class="page">
 
     <div class="tool-panel">
 
         <div class="panel-title">
             Compiler
         </div>
+
 
         <div class="compiler-layout">
 
@@ -506,6 +687,7 @@
                 </textarea>
 
             </div>
+
 
             <div>
 
@@ -530,4 +712,5 @@
 <script src="app.js"></script>
 
 </body>
+
 </html>

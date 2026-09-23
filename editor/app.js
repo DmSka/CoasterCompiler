@@ -5,24 +5,28 @@
 
 
 /* ============================================================
-   TRACK STATE
+   CURRENT TRACK PIECE
    ============================================================ */
 
 const currentPiece = {
 
-    direction: "left",
+    direction: "straight",
 
     slope: "straight",
 
     banking: "none",
 
-    operation: "none"
+    operation: "none",
+
+    speed: 40,
+
+    acceleration: 1.0
 
 };
 
 
 /* ============================================================
-   TRACK LAYOUT
+   COASTER
    ============================================================ */
 
 let coaster = [];
@@ -30,36 +34,137 @@ let coaster = [];
 let history = [];
 
 
-/*
-    Current world position.
-
-    x/y = horizontal isometric position
-    z   = coaster height
-*/
-
 let worldPosition = {
+
     x: 0,
+
     y: 0,
+
     z: 0
+
 };
 
 
 /* ============================================================
-   CANVAS SETUP
+   CANVAS
    ============================================================ */
 
-const worldCanvas = document.getElementById("worldCanvas");
-const worldContext = worldCanvas.getContext("2d");
+const worldCanvas =
+    document.getElementById("worldCanvas");
 
-const previewCanvas = document.getElementById("previewCanvas");
-const previewContext = previewCanvas.getContext("2d");
+const worldContext =
+    worldCanvas.getContext("2d");
 
-const graphCanvas = document.getElementById("graphCanvas");
-const graphContext = graphCanvas.getContext("2d");
+
+const previewCanvas =
+    document.getElementById("previewCanvas");
+
+const previewContext =
+    previewCanvas.getContext("2d");
+
+
+const graphCanvas =
+    document.getElementById("graphCanvas");
+
+const graphContext =
+    graphCanvas.getContext("2d");
 
 
 /* ============================================================
-   EDITOR BUTTONS
+   OPERATION INPUTS
+   ============================================================ */
+
+const operationSettings =
+    document.getElementById("operationSettings");
+
+const operationSpeed =
+    document.getElementById("operationSpeed");
+
+const operationAcceleration =
+    document.getElementById("operationAcceleration");
+
+
+function updateOperationSettings() {
+
+    if (currentPiece.operation === "none") {
+
+        operationSettings.classList.add("hidden");
+
+        return;
+    }
+
+
+    operationSettings.classList.remove("hidden");
+
+
+    /*
+        Set useful defaults depending on
+        the operation.
+    */
+
+    if (currentPiece.operation === "launch") {
+
+        operationSpeed.value =
+            currentPiece.speed || 50;
+
+        operationAcceleration.value =
+            currentPiece.acceleration || 1.0;
+
+    }
+
+
+    if (currentPiece.operation === "lift") {
+
+        operationSpeed.value =
+            currentPiece.speed || 8;
+
+        operationAcceleration.value =
+            currentPiece.acceleration || 0.5;
+
+    }
+
+
+    if (currentPiece.operation === "brake") {
+
+        operationSpeed.value =
+            currentPiece.speed || 40;
+
+        operationAcceleration.value =
+            currentPiece.acceleration || 1.0;
+
+    }
+
+}
+
+
+operationSpeed.addEventListener(
+    "input",
+    () => {
+
+        currentPiece.speed =
+            Number(operationSpeed.value);
+
+        updatePreview();
+
+    }
+);
+
+
+operationAcceleration.addEventListener(
+    "input",
+    () => {
+
+        currentPiece.acceleration =
+            Number(operationAcceleration.value);
+
+        updatePreview();
+
+    }
+);
+
+
+/* ============================================================
+   TRACK BUTTONS
    ============================================================ */
 
 const trackButtons =
@@ -70,15 +175,16 @@ trackButtons.forEach(button => {
 
     button.addEventListener("click", () => {
 
-        const group = button.dataset.group;
-        const value = button.dataset.value;
+        const group =
+            button.dataset.group;
 
-        currentPiece[group] = value;
+        const value =
+            button.dataset.value;
 
-        /*
-            Only one property in each group
-            can be selected at once.
-        */
+
+        currentPiece[group] =
+            value;
+
 
         document
             .querySelectorAll(
@@ -90,7 +196,16 @@ trackButtons.forEach(button => {
 
             });
 
+
         button.classList.add("active");
+
+
+        if (group === "operation") {
+
+            updateOperationSettings();
+
+        }
+
 
         updatePreview();
 
@@ -100,7 +215,7 @@ trackButtons.forEach(button => {
 
 
 /* ============================================================
-   DRAW TRACK
+   TRACK DRAWING
    ============================================================ */
 
 function drawTrackPiece(
@@ -115,11 +230,13 @@ function drawTrackPiece(
 
     context.translate(x, y);
 
-    /*
-        Convert slope into a visual vertical displacement.
-    */
+
+    /* --------------------------------------------------------
+       SLOPE
+       -------------------------------------------------------- */
 
     let slopeAngle = 0;
+
 
     switch (piece.slope) {
 
@@ -154,31 +271,40 @@ function drawTrackPiece(
     }
 
 
-    /*
-        Direction changes the track orientation.
-    */
+    /* --------------------------------------------------------
+       DIRECTION
+       -------------------------------------------------------- */
 
     let directionAngle = 0;
 
+
     if (piece.direction === "left") {
-        directionAngle = -Math.PI * 0.15;
+
+        directionAngle =
+            -Math.PI * 0.15;
+
     }
 
+
     if (piece.direction === "right") {
-        directionAngle = Math.PI * 0.15;
+
+        directionAngle =
+            Math.PI * 0.15;
+
     }
 
 
     const angle =
-        slopeAngle + directionAngle;
+        slopeAngle +
+        directionAngle;
 
 
-    /*
-        Banking changes the visible rotation
-        of the rails.
-    */
+    /* --------------------------------------------------------
+       BANKING
+       -------------------------------------------------------- */
 
     let bankAngle = 0;
+
 
     switch (piece.banking) {
 
@@ -205,37 +331,49 @@ function drawTrackPiece(
     }
 
 
-    /*
-        Track dimensions.
-    */
+    /* --------------------------------------------------------
+       DIMENSIONS
+       -------------------------------------------------------- */
 
-    const length = 105 * scale;
-    const railSpacing = 15 * scale;
+    const length =
+        105 * scale;
 
-    const dx = Math.cos(angle) * length;
-    const dy = Math.sin(angle) * length;
+    const railSpacing =
+        15 * scale;
 
 
-    /*
-        Calculate perpendicular direction
-        for the second rail.
-    */
+    const dx =
+        Math.cos(angle) *
+        length;
+
+    const dy =
+        Math.sin(angle) *
+        length;
+
 
     const px =
-        Math.cos(angle + Math.PI / 2) *
+        Math.cos(
+            angle + Math.PI / 2
+        ) *
         railSpacing;
 
     const py =
-        Math.sin(angle + Math.PI / 2) *
+        Math.sin(
+            angle + Math.PI / 2
+        ) *
         railSpacing;
 
 
-    /*
-        Track supports.
-    */
+    /* --------------------------------------------------------
+       SUPPORTS
+       -------------------------------------------------------- */
 
-    context.strokeStyle = "#555b58";
-    context.lineWidth = 4 * scale;
+    context.strokeStyle =
+        "#555b58";
+
+    context.lineWidth =
+        4 * scale;
+
 
     context.beginPath();
 
@@ -248,6 +386,7 @@ function drawTrackPiece(
         -px,
         -py + 35 * scale
     );
+
 
     context.moveTo(
         px,
@@ -262,74 +401,129 @@ function drawTrackPiece(
     context.stroke();
 
 
-    /*
-        Rotate rails according to banking.
-    */
+    /* --------------------------------------------------------
+       RAILS
+       -------------------------------------------------------- */
 
     context.save();
 
     context.rotate(bankAngle);
 
 
-    /*
-        Main rails.
-    */
+    context.strokeStyle =
+        "#343a3d";
 
-    context.strokeStyle = "#343a3d";
-    context.lineWidth = 5 * scale;
+    context.lineWidth =
+        5 * scale;
+
 
     context.beginPath();
 
-    context.moveTo(-px, -py);
-    context.lineTo(dx - px, dy - py);
+    context.moveTo(
+        -px,
+        -py
+    );
 
-    context.moveTo(px, py);
-    context.lineTo(dx + px, dy + py);
+    context.lineTo(
+        dx - px,
+        dy - py
+    );
+
+
+    context.moveTo(
+        px,
+        py
+    );
+
+    context.lineTo(
+        dx + px,
+        dy + py
+    );
 
     context.stroke();
 
 
-    /*
-        Highlight on rails.
-    */
+    /* --------------------------------------------------------
+       RAIL HIGHLIGHTS
+       -------------------------------------------------------- */
 
-    context.strokeStyle = "#858c90";
-    context.lineWidth = 2 * scale;
+    context.strokeStyle =
+        "#858c90";
+
+    context.lineWidth =
+        2 * scale;
+
 
     context.beginPath();
 
-    context.moveTo(-px, -py - 2);
-    context.lineTo(dx - px, dy - py - 2);
+    context.moveTo(
+        -px,
+        -py - 2
+    );
 
-    context.moveTo(px, py - 2);
-    context.lineTo(dx + px, dy + py - 2);
+    context.lineTo(
+        dx - px,
+        dy - py - 2
+    );
+
+
+    context.moveTo(
+        px,
+        py - 2
+    );
+
+    context.lineTo(
+        dx + px,
+        dy + py - 2
+    );
 
     context.stroke();
 
 
-    /*
-        Cross ties.
-    */
+    /* --------------------------------------------------------
+       CROSS TIES
+       -------------------------------------------------------- */
 
     const tieCount = 6;
 
-    for (let i = 0; i <= tieCount; i++) {
 
-        const t = i / tieCount;
+    for (
+        let i = 0;
+        i <= tieCount;
+        i++
+    ) {
 
-        const cx = dx * t;
-        const cy = dy * t;
+        const t =
+            i / tieCount;
+
+
+        const cx =
+            dx * t;
+
+        const cy =
+            dy * t;
+
 
         const crossX =
-            Math.cos(angle + Math.PI / 2) *
+            Math.cos(
+                angle + Math.PI / 2
+            ) *
             (railSpacing + 4 * scale);
+
 
         const crossY =
-            Math.sin(angle + Math.PI / 2) *
+            Math.sin(
+                angle + Math.PI / 2
+            ) *
             (railSpacing + 4 * scale);
 
-        context.strokeStyle = "#5e5144";
-        context.lineWidth = 3 * scale;
+
+        context.strokeStyle =
+            "#5e5144";
+
+        context.lineWidth =
+            3 * scale;
+
 
         context.beginPath();
 
@@ -347,24 +541,36 @@ function drawTrackPiece(
 
     }
 
+
     context.restore();
 
 
-    /*
-        Operation graphics.
-    */
+    /* ========================================================
+       OPERATION VISUALS
+       ======================================================== */
+
 
     if (piece.operation === "lift") {
 
-        context.strokeStyle = "#777";
-        context.lineWidth = 3 * scale;
+        context.strokeStyle =
+            "#777777";
+
+        context.lineWidth =
+            3 * scale;
+
 
         for (let i = 0; i < 5; i++) {
 
-            const t = i / 4;
+            const t =
+                i / 4;
 
-            const cx = dx * t;
-            const cy = dy * t;
+
+            const cx =
+                dx * t;
+
+            const cy =
+                dy * t;
+
 
             context.beginPath();
 
@@ -387,8 +593,12 @@ function drawTrackPiece(
 
     if (piece.operation === "brake") {
 
-        context.strokeStyle = "#555";
-        context.lineWidth = 7 * scale;
+        context.strokeStyle =
+            "#555555";
+
+        context.lineWidth =
+            7 * scale;
+
 
         context.beginPath();
 
@@ -409,16 +619,25 @@ function drawTrackPiece(
 
     if (piece.operation === "launch") {
 
-        context.strokeStyle = "#40484b";
-        context.lineWidth = 4 * scale;
+        context.strokeStyle =
+            "#40484b";
+
+        context.lineWidth =
+            4 * scale;
+
 
         for (let i = 0; i < 3; i++) {
 
             const t =
                 0.25 + i * 0.18;
 
-            const cx = dx * t;
-            const cy = dy * t;
+
+            const cx =
+                dx * t;
+
+            const cy =
+                dy * t;
+
 
             context.beginPath();
 
@@ -440,6 +659,7 @@ function drawTrackPiece(
 
 
     context.restore();
+
 }
 
 
@@ -449,8 +669,12 @@ function drawTrackPiece(
 
 function updatePreview() {
 
-    const width = previewCanvas.width;
-    const height = previewCanvas.height;
+    const width =
+        previewCanvas.width;
+
+    const height =
+        previewCanvas.height;
+
 
     previewContext.clearRect(
         0,
@@ -460,11 +684,12 @@ function updatePreview() {
     );
 
 
-    /*
-        Background.
-    */
+    /* --------------------------------------------------------
+       BACKGROUND
+       -------------------------------------------------------- */
 
-    previewContext.fillStyle = "#9ca68e";
+    previewContext.fillStyle =
+        "#9ca68e";
 
     previewContext.fillRect(
         0,
@@ -474,36 +699,66 @@ function updatePreview() {
     );
 
 
-    /*
-        Isometric-style ground.
-    */
+    /* --------------------------------------------------------
+       GROUND GRID
+       -------------------------------------------------------- */
 
-    previewContext.strokeStyle = "#7f896f";
-    previewContext.lineWidth = 1;
+    previewContext.strokeStyle =
+        "#7f896f";
 
-    for (let x = -height; x < width; x += 25) {
+    previewContext.lineWidth =
+        1;
+
+
+    for (
+        let x = -height;
+        x < width;
+        x += 25
+    ) {
 
         previewContext.beginPath();
 
-        previewContext.moveTo(x, 0);
-        previewContext.lineTo(x + height, height);
+        previewContext.moveTo(
+            x,
+            0
+        );
+
+        previewContext.lineTo(
+            x + height,
+            height
+        );
 
         previewContext.stroke();
 
     }
 
 
-    for (let x = 0; x < width + height; x += 25) {
+    for (
+        let x = 0;
+        x < width + height;
+        x += 25
+    ) {
 
         previewContext.beginPath();
 
-        previewContext.moveTo(x, 0);
-        previewContext.lineTo(x - height, height);
+        previewContext.moveTo(
+            x,
+            0
+        );
+
+        previewContext.lineTo(
+            x - height,
+            height
+        );
 
         previewContext.stroke();
 
     }
 
+
+    /* --------------------------------------------------------
+       TRACK
+       -------------------------------------------------------- */
 
     drawTrackPiece(
         previewContext,
@@ -514,76 +769,124 @@ function updatePreview() {
     );
 
 
-    /*
-        Show selected properties.
-    */
+    /* --------------------------------------------------------
+       PIECE INFORMATION
+       -------------------------------------------------------- */
 
-    previewContext.fillStyle = "#202020";
-    previewContext.font = "12px Tahoma";
+    previewContext.fillStyle =
+        "#202020";
+
+    previewContext.font =
+        "11px Tahoma";
+
 
     previewContext.fillText(
         currentPiece.direction,
         8,
-        18
+        16
     );
+
 
     previewContext.fillText(
         currentPiece.slope,
         8,
-        34
+        31
     );
+
 
     previewContext.fillText(
         currentPiece.banking,
         8,
-        50
+        46
     );
+
 
     previewContext.fillText(
         currentPiece.operation,
         8,
-        66
+        61
     );
+
+
+    if (currentPiece.operation !== "none") {
+
+        previewContext.fillText(
+            `${currentPiece.speed} mph`,
+            8,
+            76
+        );
+
+
+        previewContext.fillText(
+            `${currentPiece.acceleration} g/s`,
+            8,
+            91
+        );
+
+    }
 
 }
 
 
 /* ============================================================
-   BUILD PIECE
+   BUILD
    ============================================================ */
 
 document
     .getElementById("buildButton")
-    .addEventListener("click", buildPiece);
+    .addEventListener(
+        "click",
+        buildPiece
+    );
 
 
 function buildPiece() {
 
-    /*
-        Save state for Undo.
-    */
-
     history.push(
-        JSON.parse(JSON.stringify(coaster))
+        JSON.parse(
+            JSON.stringify(coaster)
+        )
     );
 
 
     const piece = {
 
-        id: crypto.randomUUID(),
+        id:
+            crypto.randomUUID(),
 
-        direction: currentPiece.direction,
+        direction:
+            currentPiece.direction,
 
-        slope: currentPiece.slope,
+        slope:
+            currentPiece.slope,
 
-        banking: currentPiece.banking,
+        banking:
+            currentPiece.banking,
 
-        operation: currentPiece.operation,
+        operation:
+            currentPiece.operation,
+
+        speed:
+            currentPiece.operation !== "none"
+                ? Number(currentPiece.speed)
+                : null,
+
+        acceleration:
+            currentPiece.operation !== "none"
+                ? Number(currentPiece.acceleration)
+                : null,
 
         position: {
-            x: worldPosition.x,
-            y: worldPosition.y,
-            z: worldPosition.z
+
+            x:
+                worldPosition.x,
+
+            y:
+                worldPosition.y,
+
+            z:
+                worldPosition.z
+
         }
 
     };
@@ -592,71 +895,7 @@ function buildPiece() {
     coaster.push(piece);
 
 
-    /*
-        Advance world position.
-
-        This is only the frontend geometry for now.
-        The actual physics will eventually be handled
-        by the C++ simulation.
-    */
-
-    const step = 110;
-
-    if (currentPiece.direction === "straight") {
-
-        worldPosition.x += step;
-
-    }
-
-    if (currentPiece.direction === "left") {
-
-        worldPosition.x += step * 0.75;
-        worldPosition.y -= step * 0.35;
-
-    }
-
-    if (currentPiece.direction === "right") {
-
-        worldPosition.x += step * 0.75;
-        worldPosition.y += step * 0.35;
-
-    }
-
-
-    /*
-        Change height.
-    */
-
-    switch (currentPiece.slope) {
-
-        case "down-vertical":
-            worldPosition.z -= 100;
-            break;
-
-        case "down-steep":
-            worldPosition.z -= 55;
-            break;
-
-        case "down-shallow":
-            worldPosition.z -= 25;
-            break;
-
-        case "straight":
-            break;
-
-        case "up-shallow":
-            worldPosition.z += 25;
-            break;
-
-        case "up-steep":
-            worldPosition.z += 55;
-            break;
-
-        case "up-vertical":
-            worldPosition.z += 100;
-            break;
-
-    }
+    advancePosition(piece);
 
 
     drawWorld();
@@ -669,13 +908,101 @@ function buildPiece() {
 
 
 /* ============================================================
-   WORLD RENDERING
+   POSITION
+   ============================================================ */
+
+function advancePosition(piece) {
+
+    const step = 110;
+
+
+    if (piece.direction === "straight") {
+
+        worldPosition.x += step;
+
+    }
+
+
+    if (piece.direction === "left") {
+
+        worldPosition.x +=
+            step * 0.75;
+
+        worldPosition.y -=
+            step * 0.35;
+
+    }
+
+
+    if (piece.direction === "right") {
+
+        worldPosition.x +=
+            step * 0.75;
+
+        worldPosition.y +=
+            step * 0.35;
+
+    }
+
+
+    switch (piece.slope) {
+
+        case "down-vertical":
+
+            worldPosition.z -= 100;
+
+            break;
+
+        case "down-steep":
+
+            worldPosition.z -= 55;
+
+            break;
+
+        case "down-shallow":
+
+            worldPosition.z -= 25;
+
+            break;
+
+        case "straight":
+
+            break;
+
+        case "up-shallow":
+
+            worldPosition.z += 25;
+
+            break;
+
+        case "up-steep":
+
+            worldPosition.z += 55;
+
+            break;
+
+        case "up-vertical":
+
+            worldPosition.z += 100;
+
+            break;
+
+    }
+
+}
+
+
+/* ============================================================
+   WORLD
    ============================================================ */
 
 function drawWorld() {
 
-    const width = worldCanvas.width;
-    const height = worldCanvas.height;
+    const width =
+        worldCanvas.width;
+
+    const height =
+        worldCanvas.height;
 
 
     worldContext.clearRect(
@@ -686,11 +1013,8 @@ function drawWorld() {
     );
 
 
-    /*
-        Terrain.
-    */
-
-    worldContext.fillStyle = "#8e987d";
+    worldContext.fillStyle =
+        "#8e987d";
 
     worldContext.fillRect(
         0,
@@ -700,14 +1024,19 @@ function drawWorld() {
     );
 
 
-    /*
-        Isometric terrain grid.
-    */
+    /* --------------------------------------------------------
+       GRID
+       -------------------------------------------------------- */
 
-    worldContext.strokeStyle = "#7e896e";
-    worldContext.lineWidth = 1;
+    worldContext.strokeStyle =
+        "#7e896e";
+
+    worldContext.lineWidth =
+        1;
+
 
     const gridSize = 40;
+
 
     for (
         let x = -height;
@@ -717,8 +1046,15 @@ function drawWorld() {
 
         worldContext.beginPath();
 
-        worldContext.moveTo(x, 0);
-        worldContext.lineTo(x + height, height);
+        worldContext.moveTo(
+            x,
+            0
+        );
+
+        worldContext.lineTo(
+            x + height,
+            height
+        );
 
         worldContext.stroke();
 
@@ -733,77 +1069,90 @@ function drawWorld() {
 
         worldContext.beginPath();
 
-        worldContext.moveTo(x, 0);
-        worldContext.lineTo(x - height, height);
+        worldContext.moveTo(
+            x,
+            0
+        );
+
+        worldContext.lineTo(
+            x - height,
+            height
+        );
 
         worldContext.stroke();
 
     }
 
 
-    /*
-        Origin.
+    /* --------------------------------------------------------
+       ORIGIN
+       -------------------------------------------------------- */
 
-        Offset the logical coordinates into the
-        center of the visible canvas.
-    */
+    const originX =
+        width / 2;
 
-    const originX = width / 2;
-    const originY = height / 2;
-
-
-    /*
-        Draw all pieces.
-    */
-
-    coaster.forEach((piece, index) => {
-
-        const position = piece.position;
-
-        const screenX =
-            originX +
-            position.x;
-
-        const screenY =
-            originY +
-            position.y -
-            position.z * 0.5;
+    const originY =
+        height / 2;
 
 
-        drawTrackPiece(
-            worldContext,
-            screenX,
-            screenY,
-            piece,
-            1
-        );
+    /* --------------------------------------------------------
+       PIECES
+       -------------------------------------------------------- */
+
+    coaster.forEach(
+        (piece, index) => {
+
+            const position =
+                piece.position;
 
 
-        /*
-            Piece number.
-        */
-
-        worldContext.fillStyle = "#202020";
-        worldContext.font = "11px Tahoma";
-
-        worldContext.fillText(
-            index + 1,
-            screenX,
-            screenY - 20
-        );
-
-    });
+            const screenX =
+                originX +
+                position.x;
 
 
-    /*
-        Draw build position.
-    */
+            const screenY =
+                originY +
+                position.y -
+                position.z * 0.5;
+
+
+            drawTrackPiece(
+                worldContext,
+                screenX,
+                screenY,
+                piece,
+                1
+            );
+
+
+            worldContext.fillStyle =
+                "#202020";
+
+            worldContext.font =
+                "11px Tahoma";
+
+
+            worldContext.fillText(
+                index + 1,
+                screenX,
+                screenY - 20
+            );
+
+        }
+    );
+
+
+    /* --------------------------------------------------------
+       BUILD POSITION
+       -------------------------------------------------------- */
 
     if (coaster.length > 0) {
 
         const x =
             originX +
             worldPosition.x;
+
 
         const y =
             originY +
@@ -813,6 +1162,7 @@ function drawWorld() {
 
         worldContext.fillStyle =
             "#5095db";
+
 
         worldContext.beginPath();
 
@@ -837,13 +1187,18 @@ function drawWorld() {
 
 document
     .getElementById("undoButton")
-    .addEventListener("click", undo);
+    .addEventListener(
+        "click",
+        undo
+    );
 
 
 function undo() {
 
     if (history.length === 0) {
+
         return;
+
     }
 
 
@@ -851,22 +1206,24 @@ function undo() {
         history.pop();
 
 
-    /*
-        Recalculate world position.
-    */
-
     worldPosition = {
+
         x: 0,
+
         y: 0,
+
         z: 0
+
     };
 
 
-    coaster.forEach(piece => {
+    coaster.forEach(
+        piece => {
 
-        advancePosition(piece);
+            advancePosition(piece);
 
-    });
+        }
+    );
 
 
     drawWorld();
@@ -879,84 +1236,30 @@ function undo() {
 
 
 /* ============================================================
-   POSITION CALCULATION
-   ============================================================ */
-
-function advancePosition(piece) {
-
-    const step = 110;
-
-
-    if (piece.direction === "straight") {
-
-        worldPosition.x += step;
-
-    }
-
-    if (piece.direction === "left") {
-
-        worldPosition.x += step * 0.75;
-        worldPosition.y -= step * 0.35;
-
-    }
-
-    if (piece.direction === "right") {
-
-        worldPosition.x += step * 0.75;
-        worldPosition.y += step * 0.35;
-
-    }
-
-
-    switch (piece.slope) {
-
-        case "down-vertical":
-            worldPosition.z -= 100;
-            break;
-
-        case "down-steep":
-            worldPosition.z -= 55;
-            break;
-
-        case "down-shallow":
-            worldPosition.z -= 25;
-            break;
-
-        case "up-shallow":
-            worldPosition.z += 25;
-            break;
-
-        case "up-steep":
-            worldPosition.z += 55;
-            break;
-
-        case "up-vertical":
-            worldPosition.z += 100;
-            break;
-
-    }
-
-}
-
-
-/* ============================================================
    CLEAR
    ============================================================ */
 
 document
     .getElementById("clearButton")
-    .addEventListener("click", clearCoaster);
+    .addEventListener(
+        "click",
+        clearCoaster
+    );
 
 
 function clearCoaster() {
 
     if (coaster.length === 0) {
+
         return;
+
     }
 
 
     history.push(
-        JSON.parse(JSON.stringify(coaster))
+        JSON.parse(
+            JSON.stringify(coaster)
+        )
     );
 
 
@@ -964,9 +1267,13 @@ function clearCoaster() {
 
 
     worldPosition = {
+
         x: 0,
+
         y: 0,
+
         z: 0
+
     };
 
 
@@ -990,6 +1297,7 @@ function updateStatus() {
         .textContent =
             `Pieces: ${coaster.length}`;
 
+
     document
         .getElementById("statusText")
         .textContent =
@@ -1001,39 +1309,56 @@ function updateStatus() {
 
 
 /* ============================================================
-   GRAPH DATA
+   GRAPH
    ============================================================ */
 
 let graphType = "vertical";
 
 
-const graphTabs =
-    document.querySelectorAll(".graph-tab");
+document
+    .querySelectorAll(".graph-tab")
+    .forEach(tab => {
+
+        tab.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .querySelectorAll(".graph-tab")
+                    .forEach(other => {
+
+                        other.classList.remove(
+                            "active"
+                        );
+
+                    });
 
 
-graphTabs.forEach(tab => {
+                tab.classList.add(
+                    "active"
+                );
 
-    tab.addEventListener("click", () => {
 
-        graphTabs.forEach(
-            other => other.classList.remove("active")
+                graphType =
+                    tab.dataset.graph;
+
+
+                generateSimulationData();
+
+            }
         );
 
-        tab.classList.add("active");
-
-        graphType = tab.dataset.graph;
-
-        generateSimulationData();
-
     });
-
-});
 
 
 function generateSimulationData() {
 
-    const width = graphCanvas.width;
-    const height = graphCanvas.height;
+    const width =
+        graphCanvas.width;
+
+    const height =
+        graphCanvas.height;
+
 
     graphContext.clearRect(
         0,
@@ -1043,11 +1368,8 @@ function generateSimulationData() {
     );
 
 
-    /*
-        Graph background.
-    */
-
-    graphContext.fillStyle = "#252a2c";
+    graphContext.fillStyle =
+        "#252a2c";
 
     graphContext.fillRect(
         0,
@@ -1057,30 +1379,57 @@ function generateSimulationData() {
     );
 
 
-    /*
-        Grid.
-    */
+    /* --------------------------------------------------------
+       GRID
+       -------------------------------------------------------- */
 
-    graphContext.strokeStyle = "#41484b";
-    graphContext.lineWidth = 1;
+    graphContext.strokeStyle =
+        "#41484b";
 
-    for (let x = 0; x < width; x += 50) {
+    graphContext.lineWidth =
+        1;
+
+
+    for (
+        let x = 0;
+        x < width;
+        x += 50
+    ) {
 
         graphContext.beginPath();
 
-        graphContext.moveTo(x, 0);
-        graphContext.lineTo(x, height);
+        graphContext.moveTo(
+            x,
+            0
+        );
+
+        graphContext.lineTo(
+            x,
+            height
+        );
 
         graphContext.stroke();
 
     }
 
-    for (let y = 0; y < height; y += 40) {
+
+    for (
+        let y = 0;
+        y < height;
+        y += 40
+    ) {
 
         graphContext.beginPath();
 
-        graphContext.moveTo(0, y);
-        graphContext.lineTo(width, y);
+        graphContext.moveTo(
+            0,
+            y
+        );
+
+        graphContext.lineTo(
+            width,
+            y
+        );
 
         graphContext.stroke();
 
@@ -1089,8 +1438,12 @@ function generateSimulationData() {
 
     if (coaster.length === 0) {
 
-        graphContext.fillStyle = "#bfc5c7";
-        graphContext.font = "14px Tahoma";
+        graphContext.fillStyle =
+            "#bfc5c7";
+
+        graphContext.font =
+            "14px Tahoma";
+
 
         graphContext.fillText(
             "Build track pieces to generate simulation data.",
@@ -1098,107 +1451,162 @@ function generateSimulationData() {
             30
         );
 
+
         return;
 
     }
 
 
-    /*
-        Placeholder simulation.
+    /* --------------------------------------------------------
+       TEMPORARY GRAPH
+       -------------------------------------------------------- */
 
-        This is deliberately kept separate from the
-        track editor because the actual physics will
-        eventually be replaced by C++/WebAssembly.
-    */
+    graphContext.strokeStyle =
+        "#5095db";
 
-    graphContext.strokeStyle = "#5095db";
-    graphContext.lineWidth = 3;
+    graphContext.lineWidth =
+        3;
+
 
     graphContext.beginPath();
 
 
-    coaster.forEach((piece, index) => {
+    coaster.forEach(
+        (piece, index) => {
 
-        let value = 0;
-
-
-        switch (graphType) {
-
-            case "vertical":
-
-                value =
-                    slopeValue(piece.slope);
-
-                break;
+            let value = 0;
 
 
-            case "forward":
+            switch (graphType) {
 
-                value =
-                    forwardForce(piece);
+                case "vertical":
 
-                break;
+                    value =
+                        slopeValue(
+                            piece.slope
+                        );
 
-
-            case "lateral":
-
-                value =
-                    lateralForce(piece);
-
-                break;
+                    break;
 
 
-            case "speed":
+                case "forward":
 
-                value =
-                    20 +
-                    index * 3 -
-                    slopeValue(piece.slope) * 2;
+                    value =
+                        forwardForce(
+                            piece
+                        );
 
-                break;
-
-
-            case "height":
-
-                value =
-                    piece.position.z;
-
-                break;
+                    break;
 
 
-            case "banking":
+                case "lateral":
 
-                value =
-                    bankingValue(piece.banking);
+                    value =
+                        lateralForce(
+                            piece
+                        );
 
-                break;
+                    break;
+
+
+                case "speed":
+
+                    value =
+                        piece.speed !== null
+                            ? piece.speed
+                            : 20 + index * 3;
+
+                    break;
+
+
+                case "height":
+
+                    value =
+                        piece.position.z;
+
+                    break;
+
+
+                case "banking":
+
+                    value =
+                        bankingValue(
+                            piece.banking
+                        );
+
+                    break;
+
+            }
+
+
+            const x =
+                20 +
+                index *
+                (
+                    (width - 40) /
+                    Math.max(
+                        coaster.length - 1,
+                        1
+                    )
+                );
+
+
+            let y;
+
+
+            if (graphType === "speed") {
+
+                y =
+                    height -
+                    value * 3;
+
+            }
+
+            else if (graphType === "height") {
+
+                y =
+                    height / 2 -
+                    value * 1.5;
+
+            }
+
+            else if (graphType === "banking") {
+
+                y =
+                    height / 2 -
+                    value;
+
+            }
+
+            else {
+
+                y =
+                    height / 2 -
+                    value * 20;
+
+            }
+
+
+            if (index === 0) {
+
+                graphContext.moveTo(
+                    x,
+                    y
+                );
+
+            }
+
+            else {
+
+                graphContext.lineTo(
+                    x,
+                    y
+                );
+
+            }
 
         }
-
-
-        const x =
-            20 +
-            index *
-            ((width - 40) /
-            Math.max(coaster.length - 1, 1));
-
-
-        const y =
-            height / 2 -
-            value * 20;
-
-
-        if (index === 0) {
-
-            graphContext.moveTo(x, y);
-
-        } else {
-
-            graphContext.lineTo(x, y);
-
-        }
-
-    });
+    );
 
 
     graphContext.stroke();
@@ -1244,21 +1652,58 @@ function forwardForce(piece) {
 
     let value = 0;
 
-    if (piece.slope.includes("down")) {
+
+    if (
+        piece.slope.includes(
+            "down"
+        )
+    ) {
+
         value += 1;
+
     }
 
-    if (piece.slope.includes("up")) {
+
+    if (
+        piece.slope.includes(
+            "up"
+        )
+    ) {
+
         value -= 1;
+
     }
 
-    if (piece.operation === "launch") {
-        value += 2;
+
+    if (
+        piece.operation === "launch"
+    ) {
+
+        value +=
+            piece.acceleration || 0;
+
     }
 
-    if (piece.operation === "brake") {
-        value -= 2;
+
+    if (
+        piece.operation === "brake"
+    ) {
+
+        value -=
+            piece.acceleration || 0;
+
     }
+
+
+    if (
+        piece.operation === "lift"
+    ) {
+
+        value +=
+            piece.acceleration || 0;
+
+    }
+
 
     return value;
 
@@ -1267,13 +1712,23 @@ function forwardForce(piece) {
 
 function lateralForce(piece) {
 
-    if (piece.direction === "left") {
+    if (
+        piece.direction === "left"
+    ) {
+
         return -1;
+
     }
 
-    if (piece.direction === "right") {
+
+    if (
+        piece.direction === "right"
+    ) {
+
         return 1;
+
     }
+
 
     return 0;
 
@@ -1310,7 +1765,10 @@ function bankingValue(banking) {
 
 document
     .getElementById("saveJsonButton")
-    .addEventListener("click", saveJson);
+    .addEventListener(
+        "click",
+        saveJson
+    );
 
 
 function saveJson() {
@@ -1319,25 +1777,43 @@ function saveJson() {
 
         version: 1,
 
-        sections: coaster.map(piece => ({
+        sections:
+            coaster.map(
+                piece => ({
 
-            id: piece.id,
+                    id:
+                        piece.id,
 
-            direction: piece.direction,
+                    direction:
+                        piece.direction,
 
-            slope: piece.slope,
+                    slope:
+                        piece.slope,
 
-            banking: piece.banking,
+                    banking:
+                        piece.banking,
 
-            operation: piece.operation
+                    operation:
+                        piece.operation,
 
-        }))
+                    speed:
+                        piece.speed,
+
+                    acceleration:
+                        piece.acceleration
+
+                })
+            )
 
     };
 
 
     downloadFile(
-        JSON.stringify(data, null, 4),
+        JSON.stringify(
+            data,
+            null,
+            4
+        ),
         "coaster.json",
         "application/json"
     );
@@ -1351,25 +1827,32 @@ function saveJson() {
 
 document
     .getElementById("saveCsvButton")
-    .addEventListener("click", saveCsv);
+    .addEventListener(
+        "click",
+        saveCsv
+    );
 
 
 function saveCsv() {
 
     let csv =
-        "id,direction,slope,banking,operation\n";
+        "id,direction,slope,banking,operation,speed,acceleration\n";
 
 
-    coaster.forEach(piece => {
+    coaster.forEach(
+        piece => {
 
-        csv +=
-            `"${piece.id}",` +
-            `"${piece.direction}",` +
-            `"${piece.slope}",` +
-            `"${piece.banking}",` +
-            `"${piece.operation}"\n`;
+            csv +=
+                `"${piece.id}",` +
+                `"${piece.direction}",` +
+                `"${piece.slope}",` +
+                `"${piece.banking}",` +
+                `"${piece.operation}",` +
+                `"${piece.speed ?? ""}",` +
+                `"${piece.acceleration ?? ""}"\n`;
 
-    });
+        }
+    );
 
 
     downloadFile(
@@ -1382,7 +1865,7 @@ function saveCsv() {
 
 
 /* ============================================================
-   DOWNLOAD HELPER
+   DOWNLOAD
    ============================================================ */
 
 function downloadFile(
@@ -1394,25 +1877,45 @@ function downloadFile(
     const blob =
         new Blob(
             [content],
-            { type }
+            { type: type }
         );
 
+
     const url =
-        URL.createObjectURL(blob);
+        URL.createObjectURL(
+            blob
+        );
+
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
-    link.href = url;
-    link.download = filename;
 
-    document.body.appendChild(link);
+    link.href =
+        url;
+
+    link.download =
+        filename;
+
+
+    document.body.appendChild(
+        link
+    );
+
 
     link.click();
 
-    document.body.removeChild(link);
 
-    URL.revokeObjectURL(url);
+    document.body.removeChild(
+        link
+    );
+
+
+    URL.revokeObjectURL(
+        url
+    );
 
 }
 
@@ -1421,41 +1924,57 @@ function downloadFile(
    MAIN NAVIGATION
    ============================================================ */
 
-const mainTabs =
-    document.querySelectorAll(".main-tab");
+document
+    .querySelectorAll(".main-tab")
+    .forEach(tab => {
+
+        tab.addEventListener(
+            "click",
+            () => {
+
+                const page =
+                    tab.dataset.page;
 
 
-mainTabs.forEach(tab => {
+                document
+                    .querySelectorAll(".main-tab")
+                    .forEach(other => {
 
-    tab.addEventListener("click", () => {
+                        other.classList.remove(
+                            "active"
+                        );
 
-        const page =
-            tab.dataset.page;
+                    });
 
 
-        mainTabs.forEach(
-            other =>
-                other.classList.remove("active")
+                document
+                    .querySelectorAll(".page")
+                    .forEach(
+                        pageElement => {
+
+                            pageElement.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                tab.classList.add(
+                    "active"
+                );
+
+
+                document
+                    .getElementById(page)
+                    .classList.add(
+                        "active"
+                    );
+
+            }
         );
 
-
-        document
-            .querySelectorAll(".page")
-            .forEach(pageElement =>
-                pageElement.classList.remove("active")
-            );
-
-
-        tab.classList.add("active");
-
-
-        document
-            .getElementById(page)
-            .classList.add("active");
-
     });
-
-});
 
 
 /* ============================================================
@@ -1463,6 +1982,8 @@ mainTabs.forEach(tab => {
    ============================================================ */
 
 function initialize() {
+
+    updateOperationSettings();
 
     updatePreview();
 
