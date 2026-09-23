@@ -6,6 +6,8 @@
  * @date 2026-09-17
  */
 
+#pragma once
+
 struct WaveSample
 {
     double time = 0.0;

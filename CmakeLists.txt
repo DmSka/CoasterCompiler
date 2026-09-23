@@ -14,6 +14,7 @@ add_executable(CoasterCompiler
     src/ElementGenerator.cpp
     src/TagGenerator.cpp
     src/Tokenizer.cpp
+    src/Wave.cpp
 )
 
 # 2. Tell CMake where to look for header files (.h) when compiling this target

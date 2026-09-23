@@ -42,3 +42,5 @@
 
 //analyize element for averages
     // use the other waves to determine average values, start and end values
+
+    

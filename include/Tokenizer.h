@@ -75,3 +75,16 @@
             value end
             - stop tag
 */
+
+#include "Token.h"
+
+#pragma once
+
+class Tokenizer
+{
+    public:
+        std::vector<Token> Tokenize(const std::vector<Element>& elements);
+
+    private:
+
+};

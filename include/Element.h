@@ -6,10 +6,12 @@
  * @date 2026-09-17
  */
 
+#pragma once
 
 #include <vector>
 #include "WaveSample.h"
 #include "Tag.h"
+#include "Wave.h"
 
 struct Element
 {
@@ -31,7 +33,7 @@ struct Element
     double endBanking = 0.0;
     double averageBanking = 0.0;
 
-    std::vector<WaveSample> wave;
+    Wave wave;
 
     std::vector<Tag> tags;
 };
