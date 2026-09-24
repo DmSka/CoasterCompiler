@@ -1,8 +1,3 @@
-/* ============================================================
-   COASTER CODE
-   Main stylesheet
-   ============================================================ */
-
 * {
     box-sizing: border-box;
 }
@@ -11,1124 +6,557 @@ html,
 body {
     margin: 0;
     padding: 0;
-
     width: 100%;
     height: 100%;
-
-    font-family: Tahoma, Arial, sans-serif;
-    font-size: 13px;
-
-    background: #d5d6e0;
-    color: #202020;
 }
 
+body {
+    background: #d5d6e0;
+    color: #20252b;
+    font-family: Tahoma, Arial, sans-serif;
+    overflow: hidden;
+}
 
-/* ============================================================
-   TOP BAR
-   ============================================================ */
+button,
+input,
+textarea {
+    font-family: Tahoma, Arial, sans-serif;
+}
 
 .top-bar {
-    height: 58px;
-
+    height: 62px;
     display: flex;
     align-items: center;
-
-    padding: 0 12px;
-
-    background: linear-gradient(
-        to bottom,
-        #f1f1f1 0%,
-        #d5d6e0 100%
-    );
-
-    border-bottom: 1px solid rgba(80, 90, 100, 0.45);
-
-    box-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    background: linear-gradient(to bottom, #f7f7f7, #e7e7ea 45%, #c9cbd3);
+    border-bottom: 2px solid #9296a0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
 }
 
-.title {
-    font-size: 23px;
+.application-title {
+    width: 250px;
+    padding-left: 22px;
+    font-size: 25px;
     font-weight: bold;
-
-    margin-right: 30px;
+    color: #30343b;
+    text-shadow: 1px 1px 0 #fff;
 }
 
 .main-tabs {
-    display: flex;
-
     height: 100%;
-
-    align-items: end;
-
-    gap: 3px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
 }
 
 .main-tab {
-    height: 34px;
-
-    padding: 0 24px;
-
-    font-family: Tahoma, Arial, sans-serif;
+    height: 43px;
+    min-width: 110px;
+    padding: 0 22px;
+    border: 1px solid #7f858e;
+    border-bottom: none;
+    background: linear-gradient(to bottom, #dbe4e6, #bfd5d8);
+    color: #30343b;
+    font-size: 14px;
     font-weight: bold;
-
-    background: linear-gradient(
-        to bottom,
-        #dce9eb 0%,
-        #bfd5d8 45%,
-        #b4cbce 70%,
-        #a7bdc1 100%
-    );
-
-    border: 1px solid rgba(80, 95, 100, 0.45);
-
-    border-radius: 5px 5px 0 0;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.85),
-        inset 0 2px 2px rgba(255, 255, 255, 0.25),
-        inset -1px -1px 0 rgba(70, 85, 90, 0.30);
-
     cursor: pointer;
 }
 
 .main-tab:hover {
-    background: linear-gradient(
-        to bottom,
-        #e7f0f1 0%,
-        #c9dcdf 45%,
-        #b9cfd2 70%,
-        #aec5c8 100%
-    );
+    background: linear-gradient(to bottom, #e9eeee, #c8dce0);
 }
 
 .main-tab.active {
+    background: linear-gradient(to bottom, #66a7e6, #5095db);
     color: white;
-
-    background: linear-gradient(
-        to bottom,
-        #78b5e9 0%,
-        #5095db 45%,
-        #4388cd 70%,
-        #367abd 100%
-    );
-
-    border-color: rgba(35, 75, 110, 0.55);
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 2px 3px rgba(255, 255, 255, 0.22),
-        inset -1px -1px 0 rgba(30, 65, 100, 0.38);
+    border-color: #3977ae;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .4);
 }
 
-
-/* ============================================================
-   PAGES
-   ============================================================ */
+main {
+    width: 100%;
+    height: calc(100vh - 62px);
+}
 
 .page {
     display: none;
+    width: 100%;
+    height: 100%;
 }
 
-.page.active {
+.active-page {
     display: block;
 }
 
-
-/* ============================================================
-   EDITOR
-   ============================================================ */
-
 .editor-layout {
+    width: 100%;
+    height: 100%;
     display: grid;
-
-    grid-template-columns:
-        310px
-        minmax(600px, 1fr);
-
+    grid-template-columns: 320px minmax(0, 1fr);
     gap: 8px;
-
     padding: 8px;
-
-    min-height: 750px;
 }
-
-
-/* ============================================================
-   PANELS
-   ============================================================ */
 
 .track-editor,
 .world-panel,
 .data-panel,
-.tool-panel {
-    background: #f1f1f1;
-
-    border: 1px solid rgba(80, 90, 100, 0.45);
-
-    border-radius: 5px;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.85),
-        inset -1px -1px 0 rgba(80, 90, 100, 0.25),
-        0 1px 2px rgba(0, 0, 0, 0.18);
+.full-panel {
+    border: 1px solid #8b9099;
+    background: linear-gradient(to bottom, #f7f7f7, #e9eaed);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .9), 2px 2px 5px rgba(0, 0, 0, .18);
+    overflow: hidden;
 }
 
 .panel-title {
-    height: 32px;
-
+    height: 35px;
     display: flex;
     align-items: center;
-
-    padding: 0 9px;
-
+    padding: 0 12px;
+    background: linear-gradient(to bottom, #68a8e4, #5095db 48%, #3978b7);
+    border-bottom: 1px solid #316796;
     color: white;
-
+    font-size: 14px;
     font-weight: bold;
-
-    background: linear-gradient(
-        to bottom,
-        #6ba6df 0%,
-        #5095db 50%,
-        #3b7ebc 100%
-    );
-
-    border-radius: 4px 4px 0 0;
-
-    border-bottom: 1px solid rgba(40, 80, 115, 0.65);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .45);
 }
-
-
-/* ============================================================
-   TRACK EDITOR
-   ============================================================ */
 
 .track-editor {
-    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(255, 255, 255, .22), transparent 35%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0, rgba(255, 255, 255, .035) 1px, rgba(0, 0, 0, .025) 1px, rgba(0, 0, 0, .025) 3px),
+        linear-gradient(135deg, #eeeeef, #c9cbd2);
 }
 
-.control-section {
-    padding: 8px 8px 4px;
+.editor-content {
+    flex: 1;
+    padding: 9px;
+    overflow-y: auto;
 }
 
-.control-title {
+.property-section {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #b4b7bd;
+}
+
+.property-title {
+    margin-bottom: 6px;
+    text-align: center;
+    color: #444a52;
+    font-size: 12px;
     font-weight: bold;
-
-    margin-bottom: 5px;
 }
-
-
-/* ============================================================
-   BUTTON ROWS
-   ============================================================ */
 
 .button-row {
     display: flex;
-
     justify-content: center;
     align-items: center;
-
-    gap: 5px;
+    gap: 6px;
 }
 
 .slope-grid {
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
     gap: 3px;
+}
 
-    width: 100%;
+.track-button {
+    width: 49px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 2px solid #899196;
+    border-radius: 3px;
+    background: linear-gradient(145deg, #e7eeee, #bfd5d8 48%, #a7c0c3);
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.75), inset -2px -2px 0 rgba(80,90,95,.22), 1px 2px 3px rgba(0,0,0,.22);
+    cursor: pointer;
+}
+
+.track-button:hover:not(:disabled):not(.active) {
+    background: linear-gradient(145deg, #e8f4fb, #c5e0ee 48%, #a8cddd);
+}
+
+.track-button.active,
+.track-button.active:hover:not(:disabled) {
+    border-color: #5aa4d6;
+    background: linear-gradient(145deg, #d7effc, #9fd4f4 48%, #7ec0ea);
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.7), inset -2px -2px 0 rgba(40,100,140,.18), 1px 2px 3px rgba(0,0,0,.22);
+}
+
+.track-button:disabled {
+    opacity: .38;
+    filter: grayscale(100%);
+    cursor: not-allowed;
+}
+
+.ui-icon {
+    width: 30px;
+    height: 30px;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
 }
 
 .slope-grid .track-button {
-    width: 35px;
+    width: 37px;
     height: 40px;
-
-    padding: 2px;
 }
 
-.operation-row {
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
-    gap: 5px;
-}
-
-
-/* ============================================================
-   TRACK BUTTONS
-   ============================================================ */
-
-.track-button {
-    width: 50px;
-    height: 45px;
-
-    padding: 4px;
-
-    position: relative;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: linear-gradient(
-        to bottom,
-        #dce9eb 0%,
-        #bfd5d8 45%,
-        #b4cbce 70%,
-        #a7bdc1 100%
-    );
-
-    border: 1px solid rgba(80, 95, 100, 0.45);
-
-    border-radius: 5px;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.90),
-        inset 0 2px 2px rgba(255, 255, 255, 0.30),
-        inset -1px -1px 0 rgba(70, 85, 90, 0.30),
-        0 1px 2px rgba(0, 0, 0, 0.20);
-
-    cursor: pointer;
-
-    transition:
-        background 0.08s ease,
-        box-shadow 0.08s ease;
-}
-
-.track-button::after {
-    content: "";
-
-    position: absolute;
-
-    left: 2px;
-    right: 2px;
-
-    top: 2px;
-
-    height: 40%;
-
-    border-radius: 3px;
-
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.38),
-        rgba(255, 255, 255, 0)
-    );
-
-    pointer-events: none;
-}
-
-.track-button:hover {
-    background: linear-gradient(
-        to bottom,
-        #e5f0f1 0%,
-        #c9dcdf 45%,
-        #b9cfd2 70%,
-        #aec5c8 100%
-    );
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.95),
-        inset 0 2px 3px rgba(255, 255, 255, 0.35),
-        inset -1px -1px 0 rgba(70, 85, 90, 0.28),
-        0 2px 3px rgba(0, 0, 0, 0.22);
-}
-
-.track-button.active {
-    color: white;
-
-    background: linear-gradient(
-        to bottom,
-        #78b5e9 0%,
-        #5095db 45%,
-        #4388cd 70%,
-        #367abd 100%
-    );
-
-    border-color: rgba(35, 75, 110, 0.55);
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 2px 3px rgba(255, 255, 255, 0.22),
-        inset -1px -1px 0 rgba(30, 65, 100, 0.38),
-        0 1px 2px rgba(0, 0, 0, 0.20);
-}
-
-.track-button.active::after {
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.34),
-        rgba(255, 255, 255, 0)
-    );
-}
-
-.track-button:active {
-    box-shadow:
-        inset 1px 1px 3px rgba(30, 65, 100, 0.45),
-        inset -1px -1px 0 rgba(255, 255, 255, 0.30);
-}
-
-
-/* ============================================================
-   ICONS
-   ============================================================ */
-
-.icon {
-    width: 30px;
+.slope-grid .ui-icon {
+    width: 25px;
     height: 25px;
-
-    display: block;
-
-    position: relative;
 }
-
-
-/* ============================================================
-   DIRECTION
-   ============================================================ */
-
-.direction-straight::before {
-    content: "";
-
-    position: absolute;
-
-    width: 26px;
-    height: 5px;
-
-    left: 2px;
-    top: 10px;
-
-    background: #30383d;
-
-    border-top: 2px solid #737b80;
-    border-bottom: 2px solid #161a1d;
-}
-
-.direction-left::before {
-    content: "";
-
-    position: absolute;
-
-    width: 20px;
-    height: 15px;
-
-    left: 3px;
-    top: 4px;
-
-    border-left: 4px solid #30383d;
-    border-bottom: 4px solid #30383d;
-
-    transform: skewY(-25deg);
-}
-
-.direction-right::before {
-    content: "";
-
-    position: absolute;
-
-    width: 20px;
-    height: 15px;
-
-    right: 3px;
-    top: 4px;
-
-    border-right: 4px solid #30383d;
-    border-bottom: 4px solid #30383d;
-
-    transform: skewY(25deg);
-}
-
-
-/* ============================================================
-   SLOPE
-   ============================================================ */
-
-.slope-down-vertical::before,
-.slope-down-steep::before,
-.slope-down-shallow::before,
-.slope-straight::before,
-.slope-up-shallow::before,
-.slope-up-steep::before,
-.slope-up-vertical::before {
-
-    content: "";
-
-    position: absolute;
-
-    width: 27px;
-    height: 5px;
-
-    left: 1px;
-    top: 10px;
-
-    background: #30383d;
-
-    border-top: 2px solid #737b80;
-    border-bottom: 2px solid #161a1d;
-
-    transform-origin: center;
-}
-
-.slope-down-vertical::before {
-    transform: rotate(65deg);
-}
-
-.slope-down-steep::before {
-    transform: rotate(40deg);
-}
-
-.slope-down-shallow::before {
-    transform: rotate(18deg);
-}
-
-.slope-straight::before {
-    transform: rotate(0deg);
-}
-
-.slope-up-shallow::before {
-    transform: rotate(-18deg);
-}
-
-.slope-up-steep::before {
-    transform: rotate(-40deg);
-}
-
-.slope-up-vertical::before {
-    transform: rotate(-65deg);
-}
-
-
-/* ============================================================
-   BANKING
-   ============================================================ */
-
-.bank-none::before {
-    content: "";
-
-    position: absolute;
-
-    width: 28px;
-    height: 5px;
-
-    left: 1px;
-    top: 10px;
-
-    background: #30383d;
-}
-
-.bank-left::before {
-    content: "";
-
-    position: absolute;
-
-    width: 27px;
-    height: 5px;
-
-    left: 1px;
-    top: 10px;
-
-    background: #30383d;
-
-    transform: rotate(-18deg);
-}
-
-.bank-right::before {
-    content: "";
-
-    position: absolute;
-
-    width: 27px;
-    height: 5px;
-
-    left: 1px;
-    top: 10px;
-
-    background: #30383d;
-
-    transform: rotate(18deg);
-}
-
-.bank-vertical-left::before {
-    content: "";
-
-    position: absolute;
-
-    width: 27px;
-    height: 5px;
-
-    left: 1px;
-    top: 10px;
-
-    background: #30383d;
-
-    transform: rotate(-65deg);
-}
-
-.bank-vertical-right::before {
-    content: "";
-
-    position: absolute;
-
-    width: 27px;
-    height: 5px;
-
-    left: 1px;
-    top: 10px;
-
-    background: #30383d;
-
-    transform: rotate(65deg);
-}
-
-
-/* ============================================================
-   OPERATION ICONS
-   ============================================================ */
-
-.operation-none::before {
-    content: "";
-
-    position: absolute;
-
-    width: 27px;
-    height: 5px;
-
-    left: 1px;
-    top: 10px;
-
-    background: #30383d;
-}
-
-.operation-launch::before {
-    content: "L";
-
-    position: absolute;
-
-    left: 8px;
-    top: 0;
-
-    font-size: 20px;
-    font-weight: bold;
-
-    color: #30383d;
-}
-
-.operation-lift::before {
-    content: "U";
-
-    position: absolute;
-
-    left: 6px;
-    top: 0;
-
-    font-size: 20px;
-    font-weight: bold;
-
-    color: #30383d;
-}
-
-.operation-brake::before {
-    content: "B";
-
-    position: absolute;
-
-    left: 7px;
-    top: 0;
-
-    font-size: 20px;
-    font-weight: bold;
-
-    color: #30383d;
-}
-
-
-/* ============================================================
-   OPERATION SETTINGS
-   ============================================================ */
 
 .operation-settings {
-    margin: 4px 8px 3px;
-
-    padding: 7px 8px 8px;
-
-    background: #d5d6e0;
-
-    border: 1px solid rgba(80, 90, 100, 0.40);
-
-    border-radius: 4px;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.80),
-        inset -1px -1px 0 rgba(80, 90, 100, 0.20);
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #a8adb4;
+    background: linear-gradient(to bottom, #eeeeef, #d7d9de);
 }
 
-.operation-settings.hidden {
-    display: none;
-}
-
-.input-row {
+.operation-settings label {
     display: flex;
-
-    align-items: center;
     justify-content: space-between;
-
-    margin-top: 5px;
-}
-
-.input-row label {
-    font-weight: normal;
-
-    margin: 0;
-}
-
-.input-with-unit {
-    display: flex;
-
     align-items: center;
-
-    gap: 4px;
-}
-
-.input-with-unit input {
-    width: 72px;
-    height: 26px;
-
-    padding: 3px 5px;
-
-    font-family: Tahoma, Arial, sans-serif;
-    font-size: 12px;
-
-    background: #ffffff;
-
-    border: 1px solid rgba(80, 90, 100, 0.50);
-
-    border-radius: 3px;
-
-    box-shadow:
-        inset 1px 1px 2px rgba(0, 0, 0, 0.15),
-        inset -1px -1px 0 rgba(255, 255, 255, 0.80);
-}
-
-.input-with-unit input:focus {
-    outline: none;
-
-    border-color: #5095db;
-
-    box-shadow:
-        inset 1px 1px 2px rgba(0, 0, 0, 0.12),
-        0 0 2px rgba(80, 149, 219, 0.55);
-}
-
-.input-with-unit span {
-    width: 30px;
-
+    margin-top: 6px;
     font-size: 11px;
 }
 
-
-/* ============================================================
-   PREVIEW
-   ============================================================ */
-
-.preview-section {
-    padding: 7px 8px;
+.operation-settings input {
+    width: 90px;
+    padding: 4px;
+    border: 1px solid #92979f;
+    background: white;
 }
 
-.piece-preview {
-    height: 180px;
+.hidden {
+    display: none !important;
+}
 
-    background:
-        linear-gradient(
-            to bottom,
-            #aeb6a3 0%,
-            #909b82 100%
-        );
+.preview-section {
+    margin-bottom: 8px;
+}
 
-    border: 1px solid rgba(80, 90, 75, 0.55);
-
-    border-radius: 4px;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.55),
-        inset -1px -1px 0 rgba(40, 50, 40, 0.30);
-
+.preview-frame {
+    width: 100%;
+    height: 170px;
+    border: 2px solid #7e848d;
+    background: #dfe2e7;
+    box-shadow: inset 2px 2px 3px rgba(0,0,0,.2), 1px 1px 0 rgba(255,255,255,.8);
     overflow: hidden;
 }
 
 #previewCanvas {
+    display: block;
     width: 100%;
     height: 100%;
-
-    display: block;
 }
 
-
-/* ============================================================
-   BUILD BUTTON
-   ============================================================ */
+.build-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+}
 
 .build-button {
-    width: calc(100% - 16px);
-    height: 48px;
-
-    margin: 4px 8px 8px;
-
-    font-family: Tahoma, Arial, sans-serif;
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    border: 3px solid #8f1e1e;
+    background: linear-gradient(145deg, #ff7777, #e94242 45%, #b91f1f);
+    color: white;
     font-size: 15px;
     font-weight: bold;
-
-    color: white;
-
-    background: linear-gradient(
-        to bottom,
-        #78b5e9 0%,
-        #5095db 45%,
-        #4388cd 70%,
-        #367abd 100%
-    );
-
-    border: 1px solid rgba(35, 75, 110, 0.55);
-
-    border-radius: 5px;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.60),
-        inset 0 2px 3px rgba(255, 255, 255, 0.22),
-        inset -1px -1px 0 rgba(30, 65, 100, 0.38),
-        0 1px 3px rgba(0, 0, 0, 0.22);
-
     cursor: pointer;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.55), inset -3px -3px 0 rgba(80,0,0,.25), 2px 3px 5px rgba(0,0,0,.35);
+    text-shadow: 1px 1px 1px rgba(0,0,0,.45);
 }
 
 .build-button:hover {
-    background: linear-gradient(
-        to bottom,
-        #8bc1ed 0%,
-        #5da0e2 45%,
-        #4a8ed1 70%,
-        #3d82c5 100%
-    );
+    background: linear-gradient(145deg, #ff8585, #ee4848 45%, #c52222);
 }
 
 .build-button:active {
-    box-shadow:
-        inset 2px 2px 4px rgba(30, 65, 100, 0.45),
-        inset -1px -1px 0 rgba(255, 255, 255, 0.30);
+    box-shadow: inset 2px 2px 0 rgba(80,0,0,.25), inset -2px -2px 0 rgba(255,255,255,.3);
+    transform: translateY(1px);
 }
 
-
-/* ============================================================
-   UTILITY BUTTONS
-   ============================================================ */
+.cancel-edit-button {
+    height: 36px;
+    padding: 0 12px;
+    border: 2px solid #7f858c;
+    background: linear-gradient(to bottom, #f0f0f0, #c6c8cc);
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
 .editor-actions {
     display: flex;
-
     justify-content: center;
-
-    gap: 5px;
-
-    padding: 0 8px 8px;
+    gap: 7px;
 }
 
 .utility-button {
-    min-height: 28px;
-
-    padding: 3px 12px;
-
-    font-family: Tahoma, Arial, sans-serif;
-
-    background: linear-gradient(
-        to bottom,
-        #dce9eb 0%,
-        #bfd5d8 45%,
-        #b4cbce 70%,
-        #a7bdc1 100%
-    );
-
-    border: 1px solid rgba(80, 95, 100, 0.45);
-
-    border-radius: 4px;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.85),
-        inset 0 2px 2px rgba(255, 255, 255, 0.25),
-        inset -1px -1px 0 rgba(70, 85, 90, 0.30),
-        0 1px 2px rgba(0, 0, 0, 0.18);
-
+    min-width: 70px;
+    height: 27px;
+    border: 1px solid #858b94;
+    background: linear-gradient(to bottom, #f4f4f4, #c9cbd0);
+    font-size: 11px;
     cursor: pointer;
 }
 
 .utility-button:hover {
-    background: linear-gradient(
-        to bottom,
-        #e5f0f1 0%,
-        #c9dcdf 45%,
-        #b9cfd2 70%,
-        #aec5c8 100%
-    );
+    background: linear-gradient(to bottom, #fff, #d9dade);
 }
 
-.utility-button:active {
-    box-shadow:
-        inset 1px 1px 3px rgba(60, 75, 80, 0.35),
-        inset -1px -1px 0 rgba(255, 255, 255, 0.35);
+.right-side {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) 300px;
+    gap: 8px;
 }
-
-
-/* ============================================================
-   WORLD PANEL
-   ============================================================ */
 
 .world-panel {
-    min-width: 0;
-
+    min-height: 0;
     display: flex;
     flex-direction: column;
 }
 
-.world-toolbar {
-    height: 42px;
-
+.world-header {
     display: flex;
-    align-items: center;
-
-    gap: 5px;
-
-    padding: 5px;
-
-    background: #d5d6e0;
-
-    border-bottom: 1px solid rgba(80, 90, 100, 0.30);
+    align-items: stretch;
+    justify-content: space-between;
+    height: 59px;
+    background: linear-gradient(to bottom, #68a8e4, #5095db 48%, #3978b7);
 }
 
-.world-container {
+.world-title {
     flex: 1;
+    height: 35px;
+    border: none;
+}
 
-    min-height: 600px;
+.simulate-button {
+    min-width: 155px;
+    height: 54px;
+    align-self: center;
+    margin-right: 8px;
+    padding: 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 3px solid #26733b;
+    border-radius: 28px;
+    background: linear-gradient(145deg, #72d58a, #42b861 45%, #238541);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.55), inset -3px -3px 0 rgba(0,70,20,.25), 2px 3px 5px rgba(0,0,0,.35);
+    text-shadow: 1px 1px 1px rgba(0,70,20,.5);
+}
 
-    position: relative;
+.simulate-button:hover {
+    background: linear-gradient(145deg, #82df99, #4bc46a 45%, #2c944b);
+}
 
-    overflow: hidden;
+.simulate-button:active {
+    box-shadow: inset 2px 2px 0 rgba(0,70,20,.25), inset -2px -2px 0 rgba(255,255,255,.3);
+    transform: translateY(1px);
+}
 
-    background: #89947c;
+.simulate-icon {
+    width: 27px;
+    height: 27px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.world-toolbar {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 0 9px;
+    background: #d4d6da;
+    border-bottom: 1px solid #999ea6;
+    font-size: 11px;
+    color: #4d535b;
+}
+
+.world-frame {
+    flex: 1;
+    min-height: 0;
+    padding: 5px;
+    background: #8e987d;
 }
 
 #worldCanvas {
+    display: block;
     width: 100%;
     height: 100%;
-
-    display: block;
+    background: linear-gradient(135deg, #a6ad91, #80896f);
+    border: 2px solid #656d5b;
 }
-
-.status-bar {
-    height: 27px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 8px;
-
-    background: #d5d6e0;
-
-    border-top: 1px solid rgba(255, 255, 255, 0.75);
-}
-
-
-/* ============================================================
-   DATA PANEL
-   ============================================================ */
 
 .data-panel {
-    margin: 0 8px 8px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .graph-tabs {
+    height: 34px;
     display: flex;
-
-    padding: 5px;
-
-    gap: 3px;
-
-    background: #d5d6e0;
+    padding: 4px 5px 0;
+    gap: 2px;
+    background: #d1d3d7;
+    border-bottom: 1px solid #969ba2;
 }
 
 .graph-tab {
-    padding: 6px 16px;
-
-    background: linear-gradient(
-        to bottom,
-        #dce9eb 0%,
-        #bfd5d8 45%,
-        #b4cbce 70%,
-        #a7bdc1 100%
-    );
-
-    border: 1px solid rgba(80, 95, 100, 0.45);
-
-    border-radius: 4px;
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.85),
-        inset 0 2px 2px rgba(255, 255, 255, 0.25),
-        inset -1px -1px 0 rgba(70, 85, 90, 0.30),
-        0 1px 2px rgba(0, 0, 0, 0.18);
-
+    padding: 0 13px;
+    border: 1px solid #898e96;
+    border-bottom: none;
+    background: linear-gradient(to bottom, #e8e9eb, #c4c7cb);
+    font-size: 11px;
     cursor: pointer;
 }
 
 .graph-tab.active {
+    background: linear-gradient(to bottom, #71afe6, #5095db);
     color: white;
-
-    background: linear-gradient(
-        to bottom,
-        #78b5e9 0%,
-        #5095db 45%,
-        #4388cd 70%,
-        #367abd 100%
-    );
-
-    border-color: rgba(35, 75, 110, 0.55);
-
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 2px 3px rgba(255, 255, 255, 0.22),
-        inset -1px -1px 0 rgba(30, 65, 100, 0.38),
-        0 1px 2px rgba(0, 0, 0, 0.20);
+    font-weight: bold;
 }
 
-.graph-container {
-    height: 280px;
-
-    margin: 5px;
-
-    border: 1px solid rgba(80, 90, 90, 0.55);
-
-    border-radius: 4px;
-
-    background: #252a2c;
-
-    box-shadow:
-        inset 1px 1px 2px rgba(0, 0, 0, 0.35);
+.graph-frame {
+    flex: 1;
+    min-height: 0;
+    padding: 6px;
+    background: #292d32;
 }
 
 #graphCanvas {
     width: 100%;
     height: 100%;
-
     display: block;
+    background: #202328;
 }
 
-
-/* ============================================================
-   TOKENIZER / COMPILER
-   ============================================================ */
-
-.tool-panel {
+.full-panel {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
     margin: 8px;
 }
 
-.tokenizer-layout,
-.compiler-layout {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 8px;
-
-    padding: 10px;
+.page-content {
+    padding: 15px;
 }
 
-.tokenizer-layout > div,
-.compiler-layout > div {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    font-weight: bold;
-
-    margin-bottom: 5px;
-}
-
-textarea {
-    width: 100%;
-    min-height: 500px;
-
-    resize: vertical;
-
-    padding: 8px;
-
-    font-family: Consolas, monospace;
+.page-content p {
+    margin-top: 0;
     font-size: 13px;
-
-    background: white;
-
-    border: 1px solid rgba(80, 90, 100, 0.50);
-
-    border-radius: 3px;
-
-    box-shadow:
-        inset 1px 1px 2px rgba(0, 0, 0, 0.15),
-        inset -1px -1px 0 rgba(255, 255, 255, 0.80);
-
-    outline: none;
 }
 
-textarea:focus {
-    border-color: #5095db;
+.page-content textarea {
+    width: 100%;
+    height: calc(100vh - 150px);
+    resize: none;
+    border: 1px solid #888e96;
+    background: #202328;
+    color: #d9e1e7;
+    padding: 12px;
+    font-family: Consolas, monospace;
 }
 
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-@media (max-width: 900px) {
-
-    .editor-layout {
-        grid-template-columns: 280px 1fr;
-    }
-
-    .track-button {
-        width: 46px;
-    }
-
-    .slope-grid {
-        gap: 2px;
-    }
-
-    .slope-grid .track-button {
-        width: 32px;
-        height: 38px;
-    }
-
+.files-layout {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 8px;
 }
 
+.files-layout .full-panel {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
 
-@media (max-width: 700px) {
+.file-content {
+    padding: 14px;
+}
+
+.file-card {
+    margin-bottom: 13px;
+    padding: 14px;
+    border: 1px solid #a0a5ad;
+    background: linear-gradient(to bottom, #f4f4f5, #d9dbe0);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,.85);
+}
+
+.file-card-title {
+    margin-bottom: 6px;
+    color: #3f464e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.file-card p {
+    margin: 0 0 12px;
+    color: #5a6068;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.file-button {
+    height: 32px;
+    padding: 0 15px;
+    border: 2px solid #6f7780;
+    background: linear-gradient(to bottom, #f7f7f7, #c5c8cd);
+    color: #30353b;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,.9), 1px 2px 3px rgba(0,0,0,.15);
+}
+
+.file-button:hover {
+    background: linear-gradient(to bottom, #fff, #d7d9dd);
+}
+
+@media (max-width: 1000px) {
+    body {
+        overflow: auto;
+    }
+
+    main {
+        height: auto;
+    }
 
     .editor-layout {
         grid-template-columns: 1fr;
+        height: auto;
     }
 
-    .world-panel {
-        min-height: 600px;
+    .track-editor {
+        min-height: 650px;
     }
 
-    .tokenizer-layout,
-    .compiler-layout {
+    .right-side {
+        min-height: 900px;
+    }
+
+    .files-layout {
         grid-template-columns: 1fr;
+        height: auto;
     }
-
 }

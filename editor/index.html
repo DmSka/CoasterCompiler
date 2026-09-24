@@ -1,716 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coaster Code</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
-
 <header class="top-bar">
-
-    <div class="title">
-        Coaster Code
-    </div>
-
+    <div class="application-title">Coaster Code</div>
     <nav class="main-tabs">
-
-        <button
-            class="main-tab active"
-            data-page="editor">
-            Editor
-        </button>
-
-        <button
-            class="main-tab"
-            data-page="tokenizer">
-            Tokenizer
-        </button>
-
-        <button
-            class="main-tab"
-            data-page="compiler">
-            Compiler
-        </button>
-
+        <button type="button" class="main-tab active" data-page="editorPage">Editor</button>
+        <button type="button" class="main-tab" data-page="tokenizerPage">Tokenizer</button>
+        <button type="button" class="main-tab" data-page="compilerPage">Compiler</button>
+        <button type="button" class="main-tab" data-page="filesPage">Files</button>
     </nav>
-
 </header>
 
-
-<!-- ============================================================
-     EDITOR
-     ============================================================ -->
-
-<main id="editor" class="page active">
-
+<main>
+<section id="editorPage" class="page active-page">
     <div class="editor-layout">
-
-
-        <!-- ====================================================
-             TRACK EDITOR
-             ==================================================== -->
-
         <aside class="track-editor">
-
-            <div class="panel-title">
-                Track Editor
-            </div>
-
-
-            <!-- =================================================
-                 DIRECTION
-                 ================================================= -->
-
-            <section class="control-section">
-
-                <div class="control-title">
-                    Direction
-                </div>
-
-                <div class="button-row">
-
-                    <button
-                        class="track-button"
-                        data-group="direction"
-                        data-value="left"
-                        title="Left">
-
-                        <span class="icon direction-left"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button active"
-                        data-group="direction"
-                        data-value="straight"
-                        title="Straight">
-
-                        <span class="icon direction-straight"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="direction"
-                        data-value="right"
-                        title="Right">
-
-                        <span class="icon direction-right"></span>
-
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 SLOPE
-                 ================================================= -->
-
-            <section class="control-section">
-
-                <div class="control-title">
-                    Slope
-                </div>
-
-                <div class="slope-grid">
-
-                    <button
-                        class="track-button"
-                        data-group="slope"
-                        data-value="down-vertical"
-                        title="Down Vertical">
-
-                        <span class="icon slope-down-vertical"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="slope"
-                        data-value="down-steep"
-                        title="Down Steep">
-
-                        <span class="icon slope-down-steep"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="slope"
-                        data-value="down-shallow"
-                        title="Down Shallow">
-
-                        <span class="icon slope-down-shallow"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button active"
-                        data-group="slope"
-                        data-value="straight"
-                        title="Straight">
-
-                        <span class="icon slope-straight"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="slope"
-                        data-value="up-shallow"
-                        title="Up Shallow">
-
-                        <span class="icon slope-up-shallow"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="slope"
-                        data-value="up-steep"
-                        title="Up Steep">
-
-                        <span class="icon slope-up-steep"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="slope"
-                        data-value="up-vertical"
-                        title="Up Vertical">
-
-                        <span class="icon slope-up-vertical"></span>
-
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 BANKING
-                 ================================================= -->
-
-            <section class="control-section">
-
-                <div class="control-title">
-                    Banking
-                </div>
-
-                <div class="button-row">
-
-                    <button
-                        class="track-button"
-                        data-group="banking"
-                        data-value="vertical-left"
-                        title="Vertical Left">
-
-                        <span class="icon bank-vertical-left"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="banking"
-                        data-value="left"
-                        title="Left">
-
-                        <span class="icon bank-left"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button active"
-                        data-group="banking"
-                        data-value="none"
-                        title="None">
-
-                        <span class="icon bank-none"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="banking"
-                        data-value="right"
-                        title="Right">
-
-                        <span class="icon bank-right"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="banking"
-                        data-value="vertical-right"
-                        title="Vertical Right">
-
-                        <span class="icon bank-vertical-right"></span>
-
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 OPERATION
-                 ================================================= -->
-
-            <section class="control-section">
-
-                <div class="control-title">
-                    Launch / Lift / Brakes
-                </div>
-
-                <div class="operation-row">
-
-
-                    <button
-                        class="track-button active"
-                        data-group="operation"
-                        data-value="none"
-                        title="Normal Track">
-
-                        <span class="icon operation-none"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="operation"
-                        data-value="launch"
-                        title="Launch">
-
-                        <span class="icon operation-launch"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="operation"
-                        data-value="lift"
-                        title="Lift">
-
-                        <span class="icon operation-lift"></span>
-
-                    </button>
-
-
-                    <button
-                        class="track-button"
-                        data-group="operation"
-                        data-value="brake"
-                        title="Brake">
-
-                        <span class="icon operation-brake"></span>
-
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 OPERATION SETTINGS
-                 ================================================= -->
-
-            <section
-                id="operationSettings"
-                class="operation-settings hidden">
-
-                <div class="control-title">
-                    Operation Settings
-                </div>
-
-
-                <div class="input-row">
-
-                    <label for="operationSpeed">
-                        Speed
-                    </label>
-
-                    <div class="input-with-unit">
-
-                        <input
-                            id="operationSpeed"
-                            type="number"
-                            min="0"
-                            step="1"
-                            value="40">
-
-                        <span>
-                            mph
-                        </span>
-
+            <div class="panel-title">Track Editor</div>
+            <div class="editor-content">
+
+                <section class="property-section">
+                    <div class="property-title">Direction</div>
+                    <div class="button-row">
+                        <button type="button" class="track-button" data-group="direction" data-value="left" title="Left">
+                            <img class="ui-icon" src="icons/ui/direction-left.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="direction" data-value="straight" title="Straight">
+                            <img class="ui-icon" src="icons/ui/direction-straight.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="direction" data-value="right" title="Right">
+                            <img class="ui-icon" src="icons/ui/direction-right.png" alt="">
+                        </button>
                     </div>
+                </section>
 
-                </div>
-
-
-                <div class="input-row">
-
-                    <label for="operationAcceleration">
-                        Acceleration
-                    </label>
-
-                    <div class="input-with-unit">
-
-                        <input
-                            id="operationAcceleration"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value="1.0">
-
-                        <span>
-                            g/s
-                        </span>
-
+                <section class="property-section">
+                    <div class="property-title">Slope</div>
+                    <div class="button-row slope-grid">
+                        <button type="button" class="track-button" data-group="slope" data-value="down-vertical" title="Down Vertical">
+                            <img class="ui-icon" src="icons/ui/slope-down-vertical.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="slope" data-value="down-steep" title="Down Steep">
+                            <img class="ui-icon" src="icons/ui/slope-down-steep.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="slope" data-value="down-shallow" title="Down Shallow">
+                            <img class="ui-icon" src="icons/ui/slope-down-shallow.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="slope" data-value="straight" title="Straight">
+                            <img class="ui-icon" src="icons/ui/slope-straight.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="slope" data-value="up-shallow" title="Up Shallow">
+                            <img class="ui-icon" src="icons/ui/slope-up-shallow.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="slope" data-value="up-steep" title="Up Steep">
+                            <img class="ui-icon" src="icons/ui/slope-up-steep.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="slope" data-value="up-vertical" title="Up Vertical">
+                            <img class="ui-icon" src="icons/ui/slope-up-vertical.png" alt="">
+                        </button>
                     </div>
+                </section>
 
+                <section class="property-section">
+                    <div class="property-title">Banking</div>
+                    <div class="button-row">
+                        <button type="button" class="track-button" data-group="banking" data-value="vertical-left" title="Vertical Left">
+                            <img class="ui-icon" src="icons/ui/bank-vertical-left.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="banking" data-value="left" title="Left">
+                            <img class="ui-icon" src="icons/ui/bank-left.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="banking" data-value="none" title="None">
+                            <img class="ui-icon" src="icons/ui/bank-none.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="banking" data-value="right" title="Right">
+                            <img class="ui-icon" src="icons/ui/bank-right.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="banking" data-value="vertical-right" title="Vertical Right">
+                            <img class="ui-icon" src="icons/ui/bank-vertical-right.png" alt="">
+                        </button>
+                    </div>
+                </section>
+
+                <section class="property-section">
+                    <div class="property-title">Launch / Lift / Brakes</div>
+                    <div class="button-row">
+                        <button type="button" class="track-button" data-group="operation" data-value="none" title="Normal Track">
+                            <img class="ui-icon" src="icons/ui/operation-none.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="operation" data-value="launch" title="Launch">
+                            <img class="ui-icon" src="icons/ui/operation-launch.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="operation" data-value="lift" title="Lift">
+                            <img class="ui-icon" src="icons/ui/operation-lift.png" alt="">
+                        </button>
+                        <button type="button" class="track-button" data-group="operation" data-value="brake" title="Brake">
+                            <img class="ui-icon" src="icons/ui/operation-brake.png" alt="">
+                        </button>
+                    </div>
+                </section>
+
+                <section id="operationSettings" class="operation-settings hidden">
+                    <div class="property-title">Operation Settings</div>
+                    <label>Speed <input id="operationSpeed" type="number" value="40" min="0" step="1"></label>
+                    <label>Acceleration <input id="operationAcceleration" type="number" value="1" min="0" step="0.1"></label>
+                </section>
+
+                <section class="preview-section">
+                    <div class="property-title">Piece Preview</div>
+                    <div class="preview-frame">
+                        <canvas id="previewCanvas" width="260" height="170"></canvas>
+                    </div>
+                </section>
+
+                <div class="build-area">
+                    <button type="button" id="buildButton" class="build-button">BUILD</button>
+                    <button type="button" id="cancelEditButton" class="cancel-edit-button hidden">CANCEL</button>
                 </div>
 
-            </section>
-
-
-            <!-- =================================================
-                 PIECE PREVIEW
-                 ================================================= -->
-
-            <section class="preview-section">
-
-                <div class="control-title">
-                    Piece Preview
+                <div class="editor-actions">
+                    <button type="button" id="undoButton" class="utility-button">Undo</button>
+                    <button type="button" id="clearButton" class="utility-button">Clear</button>
                 </div>
-
-                <div class="piece-preview">
-
-                    <canvas
-                        id="previewCanvas"
-                        width="260"
-                        height="180">
-                    </canvas>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 BUILD
-                 ================================================= -->
-
-            <button
-                id="buildButton"
-                class="build-button">
-
-                BUILD
-
-            </button>
-
-
-            <div class="editor-actions">
-
-                <button
-                    id="undoButton"
-                    class="utility-button">
-
-                    Undo
-
-                </button>
-
-
-                <button
-                    id="clearButton"
-                    class="utility-button">
-
-                    Clear
-
-                </button>
-
             </div>
-
         </aside>
 
+        <section class="right-side">
+            <section class="world-panel">
+                <div class="world-header">
+                    <div class="panel-title world-title">Coaster Layout</div>
+                    <button type="button" id="simulateButton" class="simulate-button">
+                        <img class="simulate-icon" src="icons/ui/simulate.png" alt="">
+                        <span>SIMULATE</span>
+                    </button>
+                </div>
+                <div class="world-toolbar">
+                    <div id="trackCount">0 segments</div>
+                </div>
+                <div class="world-frame">
+                    <canvas id="worldCanvas" width="1100" height="620"></canvas>
+                </div>
+            </section>
 
-        <!-- ====================================================
-             WORLD
-             ==================================================== -->
+            <section class="data-panel">
+                <div class="panel-title">Simulation Data</div>
+                <div class="graph-tabs">
+                    <button type="button" class="graph-tab active" data-graph="vertical">Vertical</button>
+                    <button type="button" class="graph-tab" data-graph="forward">Forward</button>
+                    <button type="button" class="graph-tab" data-graph="lateral">Lateral</button>
+                    <button type="button" class="graph-tab" data-graph="speed">Speed</button>
+                    <button type="button" class="graph-tab" data-graph="height">Height</button>
+                    <button type="button" class="graph-tab" data-graph="banking">Banking</button>
+                </div>
+                <div class="graph-frame">
+                    <canvas id="graphCanvas" width="1000" height="250"></canvas>
+                </div>
+            </section>
+        </section>
+    </div>
+</section>
 
-        <section class="world-panel">
+<section id="tokenizerPage" class="page">
+    <div class="full-panel">
+        <div class="panel-title">Tokenizer</div>
+        <div class="page-content">
+            <p>The tokenizer converts simulated coaster data into Coaster Code tokens.</p>
+            <textarea id="tokenizerOutput" readonly></textarea>
+        </div>
+    </div>
+</section>
 
-            <div class="panel-title">
-                Coaster Layout
+<section id="compilerPage" class="page">
+    <div class="full-panel">
+        <div class="panel-title">Compiler</div>
+        <div class="page-content">
+            <p>The compiler converts generated tokens into C++ source code.</p>
+            <textarea id="compilerOutput" readonly></textarea>
+        </div>
+    </div>
+</section>
+
+<section id="filesPage" class="page">
+    <div class="files-layout">
+        <section class="full-panel">
+            <div class="panel-title">Track Files</div>
+            <div class="file-content">
+                <div class="file-card">
+                    <div class="file-card-title">Save Track JSON</div>
+                    <p>Saves the current coaster layout and all track segment properties as JSON.</p>
+                    <button type="button" id="saveTrackButton" class="file-button">Save Track JSON</button>
+                </div>
+                <div class="file-card">
+                    <div class="file-card-title">Load Track JSON</div>
+                    <p>Loads a previously saved coaster layout and replaces the current track.</p>
+                    <button type="button" id="loadTrackButton" class="file-button">Load Track JSON</button>
+                </div>
             </div>
-
-
-            <div class="world-toolbar">
-
-                <button
-                    id="saveJsonButton"
-                    class="utility-button">
-
-                    Save JSON
-
-                </button>
-
-
-                <button
-                    id="saveCsvButton"
-                    class="utility-button">
-
-                    Save CSV
-
-                </button>
-
-            </div>
-
-
-            <div class="world-container">
-
-                <canvas
-                    id="worldCanvas"
-                    width="1100"
-                    height="720">
-                </canvas>
-
-            </div>
-
-
-            <div class="status-bar">
-
-                <span id="statusText">
-                    Ready
-                </span>
-
-                <span id="pieceCount">
-                    Pieces: 0
-                </span>
-
-            </div>
-
         </section>
 
+        <section class="full-panel">
+            <div class="panel-title">Graph Files</div>
+            <div class="file-content">
+                <div class="file-card">
+                    <div class="file-card-title">Save Graph JSON</div>
+                    <p>Saves vertical, forward, lateral, speed, height, and banking simulation data.</p>
+                    <button type="button" id="saveGraphButton" class="file-button">Save Graph JSON</button>
+                </div>
+                <div class="file-card">
+                    <div class="file-card-title">Load Graph JSON</div>
+                    <p>Loads previously saved graph data without changing the coaster layout.</p>
+                    <button type="button" id="loadGraphButton" class="file-button">Load Graph JSON</button>
+                </div>
+            </div>
+        </section>
     </div>
-
-
-    <!-- ========================================================
-         SIMULATION DATA
-         ======================================================== -->
-
-    <section class="data-panel">
-
-        <div class="panel-title">
-            Simulation Data
-        </div>
-
-
-        <div class="graph-tabs">
-
-            <button
-                class="graph-tab active"
-                data-graph="vertical">
-
-                Vertical
-
-            </button>
-
-
-            <button
-                class="graph-tab"
-                data-graph="forward">
-
-                Forward
-
-            </button>
-
-
-            <button
-                class="graph-tab"
-                data-graph="lateral">
-
-                Lateral
-
-            </button>
-
-
-            <button
-                class="graph-tab"
-                data-graph="speed">
-
-                Speed
-
-            </button>
-
-
-            <button
-                class="graph-tab"
-                data-graph="height">
-
-                Height
-
-            </button>
-
-
-            <button
-                class="graph-tab"
-                data-graph="banking">
-
-                Banking
-
-            </button>
-
-        </div>
-
-
-        <div class="graph-container">
-
-            <canvas
-                id="graphCanvas"
-                width="1200"
-                height="280">
-            </canvas>
-
-        </div>
-
-    </section>
-
+</section>
 </main>
 
+<input id="loadTrackInput" type="file" accept=".json,application/json" hidden>
+<input id="loadGraphInput" type="file" accept=".json,application/json" hidden>
 
-<!-- ============================================================
-     TOKENIZER
-     ============================================================ -->
-
-<main
-    id="tokenizer"
-    class="page">
-
-    <div class="tool-panel">
-
-        <div class="panel-title">
-            Tokenizer
-        </div>
-
-
-        <div class="tokenizer-layout">
-
-            <div>
-
-                <label for="tokenInput">
-                    Simulation Data
-                </label>
-
-                <textarea
-                    id="tokenInput"
-                    placeholder="Generated coaster data will appear here...">
-                </textarea>
-
-            </div>
-
-
-            <div>
-
-                <label>
-                    Tokens
-                </label>
-
-                <pre id="tokenOutput"></pre>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</main>
-
-
-<!-- ============================================================
-     COMPILER
-     ============================================================ -->
-
-<main
-    id="compiler"
-    class="page">
-
-    <div class="tool-panel">
-
-        <div class="panel-title">
-            Compiler
-        </div>
-
-
-        <div class="compiler-layout">
-
-            <div>
-
-                <label for="compilerInput">
-                    Tokens
-                </label>
-
-                <textarea
-                    id="compilerInput"
-                    placeholder="Tokens will appear here...">
-                </textarea>
-
-            </div>
-
-
-            <div>
-
-                <label for="compilerOutput">
-                    Generated C++
-                </label>
-
-                <textarea
-                    id="compilerOutput"
-                    readonly>
-                </textarea>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</main>
-
-
+<!-- Classic scripts (not ES modules) so index.html works from the file system. -->
+<script src="src/track-segment.js"></script>
+<script src="src/track-editor.js"></script>
+<script src="src/track.js"></script>
+<script src="src/physics-engine.js"></script>
+<script src="src/simulator.js"></script>
+<script src="src/file-manager.js"></script>
+<script src="src/tokenizer.js"></script>
+<script src="src/compiler.js"></script>
 <script src="app.js"></script>
-
 </body>
-
 </html>
