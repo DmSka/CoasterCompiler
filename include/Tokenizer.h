@@ -27,6 +27,14 @@
             = 
             - left hand turn tag
             - banking tag
+
+            >
+            - left hand turn tag
+            - no banking tag
+
+            <
+            - right hand turn tag
+            - no banking tag
          
         Boolean:
             If 
@@ -51,6 +59,12 @@
             - ejector tag
             - banking tag
             - right hand turn tag
+
+            {
+            - 
+            
+            }
+            -
         
         IO:
             

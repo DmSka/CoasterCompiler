@@ -142,12 +142,16 @@ The Tokenizer converts the tags generated from the coaster elements into program
 | **Mathematics** | `+` | Stall | Addition |
 | **Mathematics** | `-` | Right turn, Banking | Subtraction |
 | **Mathematics** | `=` | Left turn, Banking | Assignment |
+| **Mathematics** | `>` | Left turn, no Banking | Comparison |
+| **Mathematics** | `<` | Right turn, no Banking | Comparison |
 | **Boolean** | `if` | Double down | Conditional statement |
 | **Boolean** | `for` | Double up | For loop |
 | **Boolean** | `while` | Double inversion | While loop |
 | **Semantics** | `;` | Acceleration | End of statement |
 | **Semantics** | `(` | Ejector, Banking, Left turn | Start of expression |
 | **Semantics** | `)` | Ejector, Banking, Right turn | End of expression |
+| **Semantics** | `{` | high vertical | Start of function |
+| **Semantics** | `}` | high lateral | End of function |
 | **I/O** | `print` | Station block | Output |
 | **I/O** | `input` | Chain lift block | User input |
 
