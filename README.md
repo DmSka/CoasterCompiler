@@ -27,23 +27,6 @@ style.css
 app.js
 ```
 
-### Track Piece Icons
-
-The editor uses image files for the different track pieces.
-
-| Icon | Track Element |
-|---|---|
-| `station.png` | Station |
-| `straight.png` | Straight |
-| `drop.png` | Drop |
-| `turn-left.png` | Left Turn |
-| `turn-right.png` | Right Turn |
-| `lift.png` | Lift |
-| `launch.png` | Launch |
-| `inversion.png` | Inversion |
-
-The icon files are intentionally provided as blank template PNGs. Replace them with custom track-piece icons without changing the HTML or JavaScript.
-
 ### Running the Editor
 
 Open `index.html` in a web browser.
@@ -150,8 +133,8 @@ The Tokenizer converts the tags generated from the coaster elements into program
 | **Semantics** | `;` | Acceleration | End of statement |
 | **Semantics** | `(` | Ejector, Banking, Left turn | Start of expression |
 | **Semantics** | `)` | Ejector, Banking, Right turn | End of expression |
-| **Semantics** | `{` | high vertical | Start of function |
-| **Semantics** | `}` | high lateral | End of function |
+| **Semantics** | `{` | high negative lateral | Start of function |
+| **Semantics** | `}` | high positive lateral | End of function |
 | **I/O** | `print` | Station block | Output |
 | **I/O** | `input` | Chain lift block | User input |
 

@@ -1,248 +1,1872 @@
-const previewCanvas = document.getElementById("previewCanvas");
-const worldCanvas = document.getElementById("worldCanvas");
-const graphCanvas = document.getElementById("graphCanvas");
+/* ================================================================
+   COASTER CODE APPLICATION
+   ================================================================ */
 
-const track = new Track(worldCanvas);
-const editor = new TrackEditor(previewCanvas);
-const simulator = new Simulator(new PhysicsEngine());
-const files = new FileManager(track, simulator);
-const tokenizer = new Tokenizer();
-const compiler = new Compiler();
 
-let currentGraph = "vertical";
+/* ================================================================
+   CANVASES
+   ================================================================ */
+
+const previewCanvas =
+    document.getElementById("previewCanvas");
+
+const worldCanvas =
+    document.getElementById("worldCanvas");
+
+
+const graphCanvases = {
+
+    vertical:
+        document.getElementById(
+            "verticalGraphCanvas"
+        ),
+
+    lateral:
+        document.getElementById(
+            "lateralGraphCanvas"
+        ),
+
+    forward:
+        document.getElementById(
+            "forwardGraphCanvas"
+        ),
+
+    speed:
+        document.getElementById(
+            "speedGraphCanvas"
+        ),
+
+    height:
+        document.getElementById(
+            "heightGraphCanvas"
+        ),
+
+    banking:
+        document.getElementById(
+            "bankingGraphCanvas"
+        )
+};
+
+
+/* ================================================================
+   GLOBAL STATE
+   ================================================================ */
+
+let editor;
+let simulator;
+let track;
+
+let selectedDirection = "straight";
+let selectedSlope = "straight";
+let selectedBanking = "none";
+let selectedOperation = "none";
+
+
+/* ================================================================
+   INITIALIZATION
+   ================================================================ */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    initializeApplication();
+
+});
+
+
+function initializeApplication() {
+
+    /*
+     * The existing source classes are responsible for their
+     * normal construction. This preserves the existing project
+     * architecture.
+     */
+
+    try {
+
+        if (
+            typeof Track !== "undefined"
+        ) {
+            track = new Track();
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Track initialization:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        if (
+            typeof TrackEditor !== "undefined"
+        ) {
+            editor =
+                new TrackEditor(
+                    previewCanvas
+                );
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "TrackEditor initialization:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        if (
+            typeof Simulator !== "undefined"
+        ) {
+            simulator =
+                new Simulator();
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Simulator initialization:",
+            error
+        );
+
+    }
+
+
+    setupTrackButtons();
+    setupBuildControls();
+    setupSimulation();
+    setupNavigation();
+    setupFileControls();
+
+    drawAll();
+
+}
+
+
+/* ================================================================
+   DRAW EVERYTHING
+   ================================================================ */
 
 function drawAll() {
-    track.draw();
-    editor.drawPreview();
-    drawGraph();
-    updateTrackCount();
+
+    drawPreview();
+
+    drawWorld();
+
+    drawAllGraphs();
+
 }
 
-function updateTrackCount() {
-    const count = track.segments.length;
-    document.getElementById("trackCount").textContent =
-        `${count} segment${count === 1 ? "" : "s"}`;
+
+/* ================================================================
+   PREVIEW
+   ================================================================ */
+
+function drawPreview() {
+
+    if (
+        editor &&
+        typeof editor.drawPreview === "function"
+    ) {
+
+        editor.drawPreview();
+
+    }
+
 }
 
-function drawGraph() {
-    const ctx = graphCanvas.getContext("2d");
-    const width = graphCanvas.width;
-    const height = graphCanvas.height;
 
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#202328";
-    ctx.fillRect(0, 0, width, height);
+/* ================================================================
+   WORLD
+   ================================================================ */
 
-    const data = simulator.graphData[currentGraph] || [];
+function drawWorld() {
 
-    if (data.length < 2) {
-        ctx.fillStyle = "#8e969e";
-        ctx.font = "13px Tahoma";
-        ctx.fillText("Run simulation to generate graph data.", 20, 28);
+    if (
+        !worldCanvas
+    ) {
         return;
     }
 
-    const values = data.map(point => point.value);
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    const range = Math.max(max - min, 0.001);
 
-    ctx.strokeStyle = "#4d555d";
-    ctx.lineWidth = 1;
+    /*
+     * If the existing TrackEditor/Track system has its own
+     * world drawing implementation, use it.
+     */
 
-    for (let i = 0; i <= 5; i++) {
-        const y = 15 + (height - 30) * (i / 5);
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
+    if (
+        editor &&
+        typeof editor.drawWorld === "function"
+    ) {
+
+        editor.drawWorld(
+            worldCanvas
+        );
+
+        return;
+
     }
 
-    ctx.strokeStyle = "#62a5e5";
-    ctx.lineWidth = 2;
+
+    const ctx =
+        worldCanvas.getContext("2d");
+
+
+    const width =
+        worldCanvas.width;
+
+    const height =
+        worldCanvas.height;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    /*
+     * Subtle world grid.
+     */
+
+    ctx.strokeStyle =
+        "rgba(80,70,55,.12)";
+
+    ctx.lineWidth = 1;
+
+
+    const gridSize = 40;
+
+
+    for (
+        let x = 0;
+        x <= width;
+        x += gridSize
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            0
+        );
+
+        ctx.lineTo(
+            x,
+            height
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    for (
+        let y = 0;
+        y <= height;
+        y += gridSize
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            y
+        );
+
+        ctx.lineTo(
+            width,
+            y
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* ================================================================
+   TRACK BUTTONS
+   ================================================================ */
+
+function setupTrackButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".track-button"
+        );
+
+
+    buttons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const type =
+                    button.dataset.type;
+
+                const value =
+                    button.dataset.value;
+
+
+                handleTrackSelection(
+                    type,
+                    value,
+                    button
+                );
+
+            }
+        );
+
+    });
+
+}
+
+
+function handleTrackSelection(
+    type,
+    value,
+    button
+) {
+
+    switch (type) {
+
+        case "direction":
+
+            selectedDirection =
+                value;
+
+            selectButtonGroup(
+                "direction",
+                value
+            );
+
+            break;
+
+
+        case "slope":
+
+            selectedSlope =
+                value;
+
+            selectButtonGroup(
+                "slope",
+                value
+            );
+
+            break;
+
+
+        case "banking":
+
+            selectedBanking =
+                value;
+
+            selectButtonGroup(
+                "banking",
+                value
+            );
+
+            break;
+
+
+        case "operation":
+
+            selectedOperation =
+                value;
+
+            selectButtonGroup(
+                "operation",
+                value
+            );
+
+            updateOperationSettings();
+
+            break;
+
+    }
+
+
+    /*
+     * Let the existing editor know about the selection
+     * when it provides the appropriate method.
+     */
+
+    if (
+        editor
+    ) {
+
+        if (
+            typeof editor.setDirection === "function" &&
+            type === "direction"
+        ) {
+
+            editor.setDirection(
+                value
+            );
+
+        }
+
+
+        if (
+            typeof editor.setSlope === "function" &&
+            type === "slope"
+        ) {
+
+            editor.setSlope(
+                value
+            );
+
+        }
+
+
+        if (
+            typeof editor.setBanking === "function" &&
+            type === "banking"
+        ) {
+
+            editor.setBanking(
+                value
+            );
+
+        }
+
+
+        if (
+            typeof editor.setOperation === "function" &&
+            type === "operation"
+        ) {
+
+            editor.setOperation(
+                value
+            );
+
+        }
+
+    }
+
+
+    drawPreview();
+
+}
+
+
+function selectButtonGroup(
+    type,
+    value
+) {
+
+    document
+        .querySelectorAll(
+            `.track-button[data-type="${type}"]`
+        )
+        .forEach(button => {
+
+            button.classList.toggle(
+                "selected",
+                button.dataset.value === value
+            );
+
+        });
+
+}
+
+
+/* ================================================================
+   OPERATION SETTINGS
+   ================================================================ */
+
+function updateOperationSettings() {
+
+    const settings =
+        document.getElementById(
+            "operationSettings"
+        );
+
+
+    if (
+        !settings
+    ) {
+        return;
+    }
+
+
+    if (
+        selectedOperation === "launch" ||
+        selectedOperation === "lift" ||
+        selectedOperation === "brake"
+    ) {
+
+        settings.classList.remove(
+            "hidden"
+        );
+
+    } else {
+
+        settings.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+/* ================================================================
+   BUILD / CANCEL / UNDO / CLEAR
+   ================================================================ */
+
+function setupBuildControls() {
+
+    const buildButton =
+        document.getElementById(
+            "buildButton"
+        );
+
+    const cancelButton =
+        document.getElementById(
+            "cancelButton"
+        );
+
+    const undoButton =
+        document.getElementById(
+            "undoButton"
+        );
+
+    const clearButton =
+        document.getElementById(
+            "clearButton"
+        );
+
+
+    if (
+        buildButton
+    ) {
+
+        buildButton.addEventListener(
+            "click",
+            () => {
+
+                buildTrack();
+
+            }
+        );
+
+    }
+
+
+    if (
+        cancelButton
+    ) {
+
+        cancelButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    editor &&
+                    typeof editor.cancel === "function"
+                ) {
+
+                    editor.cancel();
+
+                }
+
+                drawAll();
+
+            }
+        );
+
+    }
+
+
+    if (
+        undoButton
+    ) {
+
+        undoButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    editor &&
+                    typeof editor.undo === "function"
+                ) {
+
+                    editor.undo();
+
+                }
+
+                drawAll();
+
+            }
+        );
+
+    }
+
+
+    if (
+        clearButton
+    ) {
+
+        clearButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    editor &&
+                    typeof editor.clear === "function"
+                ) {
+
+                    editor.clear();
+
+                }
+
+                drawAll();
+
+            }
+        );
+
+    }
+
+}
+
+
+function buildTrack() {
+
+    if (
+        !editor
+    ) {
+        return;
+    }
+
+
+    /*
+     * Read operation settings.
+     */
+
+    const speedInput =
+        document.getElementById(
+            "operationSpeed"
+        );
+
+    const accelerationInput =
+        document.getElementById(
+            "operationAcceleration"
+        );
+
+
+    const speed =
+        speedInput
+            ? Number(speedInput.value)
+            : 20;
+
+
+    const acceleration =
+        accelerationInput
+            ? Number(accelerationInput.value)
+            : 1;
+
+
+    /*
+     * Try the normal editor API first.
+     */
+
+    if (
+        typeof editor.build === "function"
+    ) {
+
+        editor.build({
+            direction:
+                selectedDirection,
+
+            slope:
+                selectedSlope,
+
+            banking:
+                selectedBanking,
+
+            operation:
+                selectedOperation,
+
+            speed:
+                speed,
+
+            acceleration:
+                acceleration
+        });
+
+    } else if (
+        typeof editor.buildSegment === "function"
+    ) {
+
+        editor.buildSegment();
+
+    }
+
+
+    drawAll();
+
+}
+
+
+/* ================================================================
+   SIMULATION
+   ================================================================ */
+
+function setupSimulation() {
+
+    const button =
+        document.getElementById(
+            "simulateButton"
+        );
+
+
+    if (
+        !button
+    ) {
+        return;
+    }
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            if (
+                simulator &&
+                typeof simulator.simulate === "function"
+            ) {
+
+                simulator.simulate();
+
+            } else if (
+                simulator &&
+                typeof simulator.run === "function"
+            ) {
+
+                simulator.run();
+
+            }
+
+
+            drawAllGraphs();
+
+        }
+    );
+
+}
+
+
+/* ================================================================
+   ALL SIX GRAPHS
+   ================================================================ */
+
+function drawAllGraphs() {
+
+    drawGraphCanvas(
+        graphCanvases.vertical,
+        "vertical",
+        "matrix"
+    );
+
+
+    drawGraphCanvas(
+        graphCanvases.lateral,
+        "lateral",
+        "matrix"
+    );
+
+
+    drawGraphCanvas(
+        graphCanvases.forward,
+        "forward",
+        "matrix"
+    );
+
+
+    drawGraphCanvas(
+        graphCanvases.speed,
+        "speed",
+        "paper"
+    );
+
+
+    drawGraphCanvas(
+        graphCanvases.height,
+        "height",
+        "paper"
+    );
+
+
+    drawGraphCanvas(
+        graphCanvases.banking,
+        "banking",
+        "paper"
+    );
+
+}
+
+
+/* ================================================================
+   GRAPH CANVAS
+   ================================================================ */
+
+function drawGraphCanvas(
+    canvas,
+    graphName,
+    style
+) {
+
+    if (
+        !canvas
+    ) {
+        return;
+    }
+
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    const width =
+        Math.max(
+            1,
+            Math.floor(rect.width)
+        );
+
+
+    const height =
+        Math.max(
+            1,
+            Math.floor(rect.height)
+        );
+
+
+    if (
+        canvas.width !== width ||
+        canvas.height !== height
+    ) {
+
+        canvas.width =
+            width;
+
+        canvas.height =
+            height;
+
+    }
+
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    if (
+        style === "matrix"
+    ) {
+
+        drawMatrixGraph(
+            ctx,
+            canvas,
+            graphName
+        );
+
+    } else {
+
+        drawPaperGraph(
+            ctx,
+            canvas,
+            graphName
+        );
+
+    }
+
+}
+
+
+/* ================================================================
+   GET GRAPH DATA
+   ================================================================ */
+
+function getGraphData(
+    graphName
+) {
+
+    if (
+        !simulator ||
+        !simulator.graphData
+    ) {
+
+        return [];
+
+    }
+
+
+    const data =
+        simulator.graphData[
+            graphName
+        ];
+
+
+    if (
+        !Array.isArray(data)
+    ) {
+
+        return [];
+
+    }
+
+
+    return data;
+
+}
+
+
+/* ================================================================
+   MATRIX GRAPH
+   ================================================================ */
+
+function drawMatrixGraph(
+    ctx,
+    canvas,
+    graphName
+) {
+
+    const width =
+        canvas.width;
+
+    const height =
+        canvas.height;
+
+
+    /*
+     * Grid.
+     */
+
+    ctx.save();
+
+    ctx.strokeStyle =
+        "rgba(74,255,130,.16)";
+
+    ctx.lineWidth = 1;
+
+
+    const gridSize = 20;
+
+
+    for (
+        let x = 0;
+        x <= width;
+        x += gridSize
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            0
+        );
+
+        ctx.lineTo(
+            x,
+            height
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    for (
+        let y = 0;
+        y <= height;
+        y += gridSize
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            y
+        );
+
+        ctx.lineTo(
+            width,
+            y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    const data =
+        getGraphData(
+            graphName
+        );
+
+
+    if (
+        data.length === 0
+    ) {
+
+        ctx.fillStyle =
+            "#45d879";
+
+        ctx.font =
+            "10px monospace";
+
+        ctx.fillText(
+            "NO DATA",
+            10,
+            height - 10
+        );
+
+        ctx.restore();
+
+        return;
+
+    }
+
+
+    let min =
+        Math.min(...data);
+
+    let max =
+        Math.max(...data);
+
+
+    if (
+        min === max
+    ) {
+
+        min -= 1;
+        max += 1;
+
+    }
+
+
+    /*
+     * Zero axis.
+     */
+
+    if (
+        min <= 0 &&
+        max >= 0
+    ) {
+
+        const zeroY =
+            height -
+            (
+                (0 - min) /
+                (max - min)
+            ) *
+            height;
+
+
+        ctx.strokeStyle =
+            "rgba(74,255,130,.35)";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            zeroY
+        );
+
+        ctx.lineTo(
+            width,
+            zeroY
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    /*
+     * Graph line.
+     */
+
     ctx.beginPath();
 
-    data.forEach((point, index) => {
-        const x = (index / (data.length - 1)) * (width - 20) + 10;
-        const y = height - 15 - ((point.value - min) / range) * (height - 30);
 
-        if (index === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    });
+    data.forEach(
+        (value, index) => {
+
+            const x =
+                data.length === 1
+                    ? 0
+                    :
+                    (
+                        index /
+                        (data.length - 1)
+                    ) *
+                    width;
+
+
+            const normalized =
+                (
+                    value - min
+                ) /
+                (
+                    max - min
+                );
+
+
+            const y =
+                height -
+                normalized *
+                (height - 8) -
+                4;
+
+
+            if (
+                index === 0
+            ) {
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            } else {
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+    );
+
+
+    ctx.strokeStyle =
+        "#54f58b";
+
+    ctx.lineWidth = 2;
+
+    ctx.shadowColor =
+        "#54f58b";
+
+    ctx.shadowBlur = 5;
 
     ctx.stroke();
 
-    ctx.fillStyle = "#d5d9de";
-    ctx.font = "11px Tahoma";
-    ctx.fillText(
-        `${currentGraph}  min: ${min.toFixed(2)}  max: ${max.toFixed(2)}`,
-        10,
-        14
-    );
-}
+    ctx.shadowBlur = 0;
 
-function showError(error) {
-    console.error(error);
-    alert(error instanceof Error ? error.message : String(error));
-}
 
-/* Track property buttons */
-document.querySelectorAll(".track-button").forEach(button => {
-    button.addEventListener("click", () => {
-        editor.select(button.dataset.group, button.dataset.value);
-    });
-});
+    /*
+     * Data points.
+     */
 
-/* Operation settings */
-document.getElementById("operationSpeed").addEventListener("input", event => {
-    editor.currentPiece.speed = Number(event.target.value);
-});
+    ctx.fillStyle =
+        "#8affad";
 
-document.getElementById("operationAcceleration").addEventListener("input", event => {
-    editor.currentPiece.acceleration = Number(event.target.value);
-});
 
-/* Build / update */
-document.getElementById("buildButton").addEventListener("click", () => {
-    try {
-        const segment = editor.createSegment();
+    const interval =
+        Math.max(
+            1,
+            Math.floor(
+                data.length / 30
+            )
+        );
 
-        if (editor.editingIndex !== null) {
-            track.update(editor.editingIndex, segment);
-            editor.exitEditMode();
-        } else {
-            track.add(segment);
+
+    data.forEach(
+        (value, index) => {
+
+            if (
+                index % interval !== 0
+            ) {
+                return;
+            }
+
+
+            const x =
+                data.length === 1
+                    ? 0
+                    :
+                    (
+                        index /
+                        (data.length - 1)
+                    ) *
+                    width;
+
+
+            const normalized =
+                (
+                    value - min
+                ) /
+                (
+                    max - min
+                );
+
+
+            const y =
+                height -
+                normalized *
+                (height - 8) -
+                4;
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                x,
+                y,
+                1.5,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
         }
+    );
 
-        drawAll();
-    } catch (error) {
-        showError(error);
-    }
-});
 
-document.getElementById("cancelEditButton").addEventListener("click", () => {
-    editor.exitEditMode();
-});
+    ctx.restore();
 
-document.getElementById("undoButton").addEventListener("click", () => {
-    track.undo();
-    editor.exitEditMode();
-    drawAll();
-});
+}
 
-document.getElementById("clearButton").addEventListener("click", () => {
-    track.clear();
-    editor.exitEditMode();
-    drawAll();
-});
 
-/* Edit an existing segment by clicking it */
-worldCanvas.addEventListener("click", event => {
-    const index = track.hitTest(event);
+/* ================================================================
+   PAPER GRAPH
+   ================================================================ */
 
-    if (index !== null) {
-        editor.loadSegment(track.segments[index], index);
-    }
-});
+function drawPaperGraph(
+    ctx,
+    canvas,
+    graphName
+) {
 
-/* Simulation */
-document.getElementById("simulateButton").addEventListener("click", () => {
-    try {
-        simulator.run(track.segments);
-        drawGraph();
+    const width =
+        canvas.width;
 
-        const tokenText = tokenizer.tokenize(simulator.samples);
-        document.getElementById("tokenizerOutput").value = tokenText;
-        document.getElementById("compilerOutput").value =
-            compiler.compile(tokenText);
-    } catch (error) {
-        showError(error);
-    }
-});
+    const height =
+        canvas.height;
 
-/* Graph tabs */
-document.querySelectorAll(".graph-tab").forEach(button => {
-    button.addEventListener("click", () => {
-        document.querySelectorAll(".graph-tab").forEach(tab => {
-            tab.classList.remove("active");
-        });
 
-        button.classList.add("active");
-        currentGraph = button.dataset.graph;
-        drawGraph();
-    });
-});
+    ctx.save();
 
-/* Main tabs */
-document.querySelectorAll(".main-tab").forEach(button => {
-    button.addEventListener("click", () => {
-        document.querySelectorAll(".main-tab").forEach(tab => {
-            tab.classList.remove("active");
-        });
 
-        document.querySelectorAll(".page").forEach(page => {
-            page.classList.remove("active-page");
-        });
+    /*
+     * Graph paper.
+     */
 
-        button.classList.add("active");
+    ctx.strokeStyle =
+        "rgba(105,91,65,.20)";
 
-        const page = document.getElementById(button.dataset.page);
-        if (page) page.classList.add("active-page");
-    });
-});
+    ctx.lineWidth = 1;
 
-/* File buttons */
-document.getElementById("saveTrackButton").addEventListener("click", () => {
-    try {
-        files.saveTrack();
-    } catch (error) {
-        showError(error);
-    }
-});
 
-document.getElementById("loadTrackButton").addEventListener("click", () => {
-    document.getElementById("loadTrackInput").click();
-});
+    const gridSize = 15;
 
-document.getElementById("loadTrackInput").addEventListener("change", async event => {
-    if (!event.target.files.length) return;
 
-    try {
-        await files.loadTrack(event.target.files[0]);
-        editor.exitEditMode();
-        drawAll();
-    } catch (error) {
-        showError(error);
+    for (
+        let x = 0;
+        x <= width;
+        x += gridSize
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            0
+        );
+
+        ctx.lineTo(
+            x,
+            height
+        );
+
+        ctx.stroke();
+
     }
 
-    event.target.value = "";
-});
 
-document.getElementById("saveGraphButton").addEventListener("click", () => {
-    try {
-        files.saveGraph();
-    } catch (error) {
-        showError(error);
-    }
-});
+    for (
+        let y = 0;
+        y <= height;
+        y += gridSize
+    ) {
 
-document.getElementById("loadGraphButton").addEventListener("click", () => {
-    document.getElementById("loadGraphInput").click();
-});
+        ctx.beginPath();
 
-document.getElementById("loadGraphInput").addEventListener("change", async event => {
-    if (!event.target.files.length) return;
+        ctx.moveTo(
+            0,
+            y
+        );
 
-    try {
-        await files.loadGraph(event.target.files[0]);
-        drawGraph();
-    } catch (error) {
-        showError(error);
+        ctx.lineTo(
+            width,
+            y
+        );
+
+        ctx.stroke();
+
     }
 
-    event.target.value = "";
-});
 
-window.addEventListener("resize", drawAll);
+    const data =
+        getGraphData(
+            graphName
+        );
 
-drawAll();
+
+    if (
+        data.length === 0
+    ) {
+
+        ctx.fillStyle =
+            "#756a57";
+
+        ctx.font =
+            "10px monospace";
+
+        ctx.fillText(
+            "NO DATA",
+            10,
+            height - 10
+        );
+
+        ctx.restore();
+
+        return;
+
+    }
+
+
+    let min =
+        Math.min(...data);
+
+    let max =
+        Math.max(...data);
+
+
+    if (
+        min === max
+    ) {
+
+        min -= 1;
+        max += 1;
+
+    }
+
+
+    /*
+     * Zero line.
+     */
+
+    if (
+        min <= 0 &&
+        max >= 0
+    ) {
+
+        const zeroY =
+            height -
+            (
+                (0 - min) /
+                (max - min)
+            ) *
+            height;
+
+
+        ctx.strokeStyle =
+            "rgba(70,61,45,.4)";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            zeroY
+        );
+
+        ctx.lineTo(
+            width,
+            zeroY
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    /*
+     * Slightly imperfect line to give it
+     * the hand-drawn look.
+     */
+
+    ctx.beginPath();
+
+
+    data.forEach(
+        (value, index) => {
+
+            const x =
+                data.length === 1
+                    ? 0
+                    :
+                    (
+                        index /
+                        (data.length - 1)
+                    ) *
+                    width;
+
+
+            const normalized =
+                (
+                    value - min
+                ) /
+                (
+                    max - min
+                );
+
+
+            let y =
+                height -
+                normalized *
+                (height - 10) -
+                5;
+
+
+            y +=
+                Math.sin(
+                    index * 1.73
+                ) *
+                .7;
+
+
+            if (
+                index === 0
+            ) {
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            } else {
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+    );
+
+
+    ctx.strokeStyle =
+        "#4e4639";
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+
+
+    /*
+     * Hand-drawn points.
+     */
+
+    ctx.fillStyle =
+        "#4e4639";
+
+
+    const interval =
+        Math.max(
+            1,
+            Math.floor(
+                data.length / 20
+            )
+        );
+
+
+    data.forEach(
+        (value, index) => {
+
+            if (
+                index % interval !== 0
+            ) {
+                return;
+            }
+
+
+            const x =
+                data.length === 1
+                    ? 0
+                    :
+                    (
+                        index /
+                        (data.length - 1)
+                    ) *
+                    width;
+
+
+            const normalized =
+                (
+                    value - min
+                ) /
+                (
+                    max - min
+                );
+
+
+            let y =
+                height -
+                normalized *
+                (height - 10) -
+                5;
+
+
+            y +=
+                Math.sin(
+                    index * 1.73
+                ) *
+                .7;
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                x,
+                y,
+                1.3,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        }
+    );
+
+
+    ctx.restore();
+
+}
+
+
+/* ================================================================
+   NAVIGATION DRAWERS
+   ================================================================ */
+
+function setupNavigation() {
+
+    const drawers =
+        document.querySelectorAll(
+            ".desk-drawer"
+        );
+
+
+    const pages =
+        document.querySelectorAll(
+            ".page"
+        );
+
+
+    drawers.forEach(
+        drawer => {
+
+            drawer.addEventListener(
+                "click",
+                () => {
+
+                    const pageId =
+                        drawer.dataset.page;
+
+
+                    drawers.forEach(
+                        item => {
+
+                            item.classList.toggle(
+                                "active",
+                                item === drawer
+                            );
+
+                        }
+                    );
+
+
+                    pages.forEach(
+                        page => {
+
+                            page.classList.toggle(
+                                "active",
+                                page.id === pageId
+                            );
+
+                        }
+                    );
+
+
+                    if (
+                        pageId === "editorPage"
+                    ) {
+
+                        requestAnimationFrame(
+                            () => {
+
+                                drawAll();
+
+                            }
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* ================================================================
+   FILE CONTROLS
+   ================================================================ */
+
+function setupFileControls() {
+
+    const saveJsonButton =
+        document.getElementById(
+            "saveJsonButton"
+        );
+
+    const loadJsonButton =
+        document.getElementById(
+            "loadJsonButton"
+        );
+
+    const saveGraphButton =
+        document.getElementById(
+            "saveGraphButton"
+        );
+
+    const loadGraphButton =
+        document.getElementById(
+            "loadGraphButton"
+        );
+
+    const fileInput =
+        document.getElementById(
+            "fileInput"
+        );
+
+
+    if (
+        saveJsonButton
+    ) {
+
+        saveJsonButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    typeof files !== "undefined" &&
+                    typeof files.saveJson === "function"
+                ) {
+
+                    files.saveJson();
+
+                } else if (
+                    typeof fileManager !== "undefined" &&
+                    typeof fileManager.saveJson === "function"
+                ) {
+
+                    fileManager.saveJson();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    if (
+        loadJsonButton &&
+        fileInput
+    ) {
+
+        loadJsonButton.addEventListener(
+            "click",
+            () => {
+
+                fileInput.click();
+
+            }
+        );
+
+    }
+
+
+    if (
+        fileInput
+    ) {
+
+        fileInput.addEventListener(
+            "change",
+            event => {
+
+                const file =
+                    event.target.files[0];
+
+
+                if (
+                    !file
+                ) {
+                    return;
+                }
+
+
+                if (
+                    typeof files !== "undefined" &&
+                    typeof files.loadJson === "function"
+                ) {
+
+                    files.loadJson(
+                        file
+                    );
+
+                } else if (
+                    typeof fileManager !== "undefined" &&
+                    typeof fileManager.loadJson === "function"
+                ) {
+
+                    fileManager.loadJson(
+                        file
+                    );
+
+                }
+
+
+                requestAnimationFrame(
+                    () => {
+
+                        drawAll();
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+    if (
+        saveGraphButton
+    ) {
+
+        saveGraphButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    typeof files !== "undefined" &&
+                    typeof files.saveGraph === "function"
+                ) {
+
+                    files.saveGraph();
+
+                } else if (
+                    typeof fileManager !== "undefined" &&
+                    typeof fileManager.saveGraph === "function"
+                ) {
+
+                    fileManager.saveGraph();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    if (
+        loadGraphButton
+    ) {
+
+        loadGraphButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    typeof files !== "undefined" &&
+                    typeof files.loadGraph === "function"
+                ) {
+
+                    files.loadGraph();
+
+                } else if (
+                    typeof fileManager !== "undefined" &&
+                    typeof fileManager.loadGraph === "function"
+                ) {
+
+                    fileManager.loadGraph();
+
+                }
+
+
+                requestAnimationFrame(
+                    () => {
+
+                        drawAllGraphs();
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+}
+
+
+/* ================================================================
+   RESIZE
+   ================================================================ */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        requestAnimationFrame(
+            () => {
+
+                drawAll();
+
+            }
+        );
+
+    }
+);
