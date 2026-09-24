@@ -125,4 +125,7 @@ I am not sure how to handle inversion yet
 
 
 Reworks for UI.
-- remove a lot of  the labels for stuff, remove blueprint preview, remove the title at the top, remove the track world, add back the icon to the simulate button, remove piece builder, remove turns, sloep, banking labels, remove speical modifiers labels, remove the labels none, launch, lift, brake, remove the Coaster code and track system online at the top, please remove live data and force monitor tags, the tabs at the button should be part of the bottom panel, they should be much smaller and be connected, also remove the background between the 3 columns on the button,the banking is better but still doesnt go in a circle, the buuttons for that panel should all be more rounded on the edges and have darker colors when selected. the build track button should be large and in the middle underneath the turns and slope buttons. on either side of that will be the undo and clear buttons as rounded circles, those should look like an eraser, and whiteout, I can make those icons if needed. the crts look very stretched out please make it go all the way to the bottom and top of the screen, also do this with the speed height and banking tab
+- banking icon fixed
+- insert own icons for undo and clear
+- input for speed and accelartion should be above those icons, the spacing shouldn't move just should be visible
+- the tabs on the button should go under the track segment preview. They should be alligned within the panel just look different 
